@@ -10,7 +10,6 @@ import {
 import {
     Card,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
@@ -24,16 +23,15 @@ import AudioCard from "@/components/ui/AudioCard";
 import RadarChart from "@/components/charts/RadarCharts";
 import { useEffect, useState, useRef, FC } from "react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 import AudioTranscript from "@/components/ui/AudioTranscript";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'chart.js/auto';
-import { ChartOptions } from 'chart.js';
+import { Chart, ChartData, ChartOptions} from 'chart.js/auto';
+import "chart.js/auto";
 import { Bar } from 'react-chartjs-2';
 import 'react-circular-progressbar/dist/styles.css';
 import { Rating } from "react-simple-star-rating";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+
 
 
 export default function Home() {
@@ -50,26 +48,7 @@ export default function Home() {
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
 
-    //Overview Tab State Variables
-    const [percentileData, setPercentileData] = useState({
-        "Result" : "N/A",
-        "Position": "Full-Stack Engineer (NextJS)",
-        "User": "Yashh Jaggi",
-        "Date": "April 12, 2024",
-        "TimeTaken": "1 hour 30 minutes",
-        "PercentileData": {
-            "CandidateScore": 4.0,
-            "TotalUsers": 50,
-            "UserDistribution": [
-                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0 },
-                { "Percentile": "1 - 2", "UserCount": 15, "PercentileBucket": 40, "LowerPercentileBucket": 11},
-                { "Percentile": "2 - 3", "UserCount": 20, "PercentileBucket": 70, "LowerPercentileBucket": 41},
-                { "Percentile": "3 - 4", "UserCount": 7, "PercentileBucket": 94, "LowerPercentileBucket": 71},
-                { "Percentile": "4 - 5", "UserCount": 3, "PercentileBucket": 100, "LowerPercentileBucket": 95},
-            ]
-        }
-    });
-    
+    //Response from backend
     const [overviewObj, setOverviewObj] = useState({
         "Result" : "Learning",
         "Position": "Full-Stack Engineer (NextJS)",
@@ -80,14 +59,35 @@ export default function Home() {
             "CandidateScore": 4.0,
             "TotalUsers": 50,
             "UserDistribution": [
-                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0 },
-                { "Percentile": "1 - 2", "UserCount": 15, "PercentileBucket": 40, "LowerPercentileBucket": 11},
-                { "Percentile": "2 - 3", "UserCount": 20, "PercentileBucket": 70, "LowerPercentileBucket": 41},
-                { "Percentile": "3 - 4", "UserCount": 7, "PercentileBucket": 94, "LowerPercentileBucket": 71},
-                { "Percentile": "4 - 5", "UserCount": 3, "PercentileBucket": 100, "LowerPercentileBucket": 95},
+                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0, isUser: false },
+                { "Percentile": "1 - 2", "UserCount": 15, "PercentileBucket": 40, "LowerPercentileBucket": 11, isUser: false },
+                { "Percentile": "2 - 3", "UserCount": 20, "PercentileBucket": 70, "LowerPercentileBucket": 41, isUser: false },
+                { "Percentile": "3 - 4", "UserCount": 7, "PercentileBucket": 94, "LowerPercentileBucket": 71, isUser: true,},
+                { "Percentile": "4 - 5", "UserCount": 3, "PercentileBucket": 100, "LowerPercentileBucket": 95, isUser: false },
             ]
-        }
+        },
+        "Segments": [
+            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically,', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Algorithms", "Rating": 2.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle'], negativeSuggestionKeywords: ['edge', 'cases', 'effectively']},
+            {"Skill": "Data Structures", "Rating": 3.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Coding Skills", "Rating": 1.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Complexity Analysis", "Rating": 4.0, "AveragePastRating": 4.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Communication Skills", "Rating": 3.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+        ],
     });
+
+    //Overview Tab State Variables
+    const [percentileData, setPercentileData] = useState<undefined | {
+        labels: string[];
+        datasets: {
+            label: string;
+            data: number[];
+            borderWidth: number;
+            backgroundColor: string[];
+            hoverBackgroundColor: string[];
+        }[];
+    }>(undefined);
+   
 
     const [segmentChunks, setSegmentChunks] = useState([ 
         [
@@ -122,9 +122,21 @@ export default function Home() {
 
         let _percentileLabels: string[] = [];
         let _userCount: number[] = [];
-        for (let i = 0; i < overviewObj.PercentileData.UserDistribution.length; i++) {
-            _percentileLabels.push(overviewObj.PercentileData.UserDistribution[i].Percentile);
-            _userCount.push(overviewObj.PercentileData.UserDistribution[i].UserCount);
+        let _backgroundColor: string[] = [];
+        let _hoverBackgroundColor: string[] = [];
+
+        for (let bin of overviewObj.PercentileData.UserDistribution) 
+        {
+            _percentileLabels.push(bin.Percentile);
+            _userCount.push(bin.UserCount);
+            
+            if(bin.isUser) {
+                _backgroundColor.push("rgba(24, 24, 27, 0.7)");
+                _hoverBackgroundColor.push("rgba(24, 24, 27, 1)");
+            } else {
+                _backgroundColor.push("rgba(24, 24, 27, 0.3)");
+                _hoverBackgroundColor.push("rgba(24, 24, 27, 0.6)");
+            }
         }
 
         const _percentileData = {
@@ -133,61 +145,24 @@ export default function Home() {
                 {
                     label: 'User Count',
                     data: _userCount,
-                    backgroundColor: [
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 1)",
-                        "rgba(24, 24, 27, 0.6)",
-                    ],
-                    borderColor: [
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 1)",
-                        "rgba(24, 24, 27, 0.6)",
-                    ],
                     borderWidth: 0,
-                    hoverBackgroundColor: [
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 0.6)",
-                        "rgba(24, 24, 27, 1)",
-                        "rgba(24, 24, 27, 0.6)",
-                    ],
-                    hoverBorderColor: 'rgba(75,192,192,1)',
+                    backgroundColor: _backgroundColor,
+                    hoverBackgroundColor: _hoverBackgroundColor,
                 }
             ],
         }
-        //setPercentileData(_percentileData);
+        setPercentileData(_percentileData);
     }, []);
 
-    const percentile_data = {
-        labels: ['0 - 1', '1-2', '2 - 3', '3 - 4', '4 - 5'],
-        datasets: [
-          {
-            label: 'User Count',
-            backgroundColor: [
-                "rgba(24, 24, 27, 0.3)",
-                "rgba(24, 24, 27, 0.3)",
-                "rgba(24, 24, 27, 0.3)",
-                "rgba(24, 24, 27, 0.7)",
-                "rgba(24, 24, 27, 0.3)",
-            ],
-            hoverBackgroundColor: [
-                "rgba(24, 24, 27, 0.6)",
-                "rgba(24, 24, 27, 0.6)",
-                "rgba(24, 24, 27, 0.6)",
-                "rgba(24, 24, 27, 1)",
-                "rgba(24, 24, 27, 0.6)",
-            ],
-            data: [5, 15, 20, 7, 3],
-          },
-        ],
-    };
+    
 
-    const percentile_options  = {
-        
+    const percentile_options: ChartOptions<'bar'>  = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+            },
+        },
         scales: {
             x: {
                 grid: { display: false, },
@@ -213,9 +188,6 @@ export default function Home() {
                     },
                 },
             },
-        },
-        legend: {
-            display: false,
         },
         
     };
@@ -297,6 +269,7 @@ export default function Home() {
                                             {overviewObj.Position}
                                         </p>
                                     </div>
+
                                 </div>
 
                                 <div className="grid grid-rows-3 gap-2 px-3 pt-4 pb-4">
@@ -378,17 +351,8 @@ export default function Home() {
                                     </div>
                                 </div>
 
-                                <Bar data={percentile_data} options={percentile_options} className="px-3 pb-3"/>
+                                <Bar data={percentileData || { labels: [], datasets: [] }} options={percentile_options} className="px-3 pb-3"/>
 
-                                {/*
-                                    <div className="grid grid-flow-row gap-4 px-3 py-3">
-                                        
-                                        <div className="border rounded-lg">
-                                            <CircularProgressbar value={progressValue} text={`4/5`} />
-                                        </div>
-                                        
-                                    </div>
-                                */}
                             </ResizablePanel>
 
                         </ResizablePanelGroup>
@@ -464,7 +428,7 @@ export default function Home() {
                                     <p className="text-base font-bold text-green-700"> Outperformance </p>
 
                                     <Table className="mx-3">
-                                        <TableBody>
+                                        <TableBody key="OutperformanceTable">
                                             { pastPerformanceObj.Overperformance.map((segmentObj, index) => {
                                                 return (
                                                     <TableRow key={index}>
@@ -582,90 +546,77 @@ export default function Home() {
                             </Card>
 
                         </div>
-
+                        
                         <Accordion type="multiple" className="mt-4">
+
+                        { overviewObj.Segments.map((segmentObj, indx) => {
+                            return (
+                                <AccordionItem value={`suggestion${indx+1}`} className="suggest-segment">
+
+                                    <AccordionTrigger className="text-base text-muted-foreground font-semibold rounded-md [&[data-state=open]]:bg-slate-100 [&[data-state=open]]:text-black hover:text-black hover:no-underline hover:bg-slate-100 px-3 py-3">
+                                        <p className="mb-0"> {segmentObj.Skill} </p>
+                                    </AccordionTrigger>
+
+                                    <AccordionContent className="px-3">
+                                        
+                                        <div className="score-container mt-4">
+                                            <p className="text-base text-muted-foreground font-semibold mb-1">
+                                                Score
+                                            </p>
+                                            <Rating
+                                                initialValue={segmentObj.Rating}
+                                                size={20}
+                                                fillColor={segmentObj.Rating > 3 ? "rgba(33, 37, 41, 1)" : (segmentObj.Rating > 2 ? "rgba(33, 37, 41, 0.5)" : "rgba(33, 37, 41, 0.3)")}
+                                                readonly={true}
+                                                className="rating-stars"
+                                            />
+                                        </div>
+
+                                        <div className="suggestion-container mt-4">
+                                            <p className="text-base text-muted-foreground font-semibold mb-3">
+                                                Suggestion
+                                            </p>
+
+                                            {
+                                                segmentObj.Description.split(" ").map((word: string, index: number) => {
+                                                
+                                                    const isPositive: boolean = segmentObj.positiveSuggestionKeywords.includes(word);
+                                                    const isNegative: boolean = segmentObj.negativeSuggestionKeywords.includes(word as never);
+
+                                                    return (
+                                                        isPositive ?
+                                                        (
+                                                            <span key={index} className="font-semibold text-green-600">
+                                                                {word}{index === segmentObj.Description.split(" ").length - 1 ? "" : " "}
+                                                            </span>
+                                                        ) :
+                                                        (
+                                                            isNegative ?
+                                                            (
+                                                                <span key={index} className="font-semibold text-red-600">
+                                                                    {word}{index === segmentObj.Description.split(" ").length - 1 ? "" : " "}
+                                                                </span>
+                                                            ) :
+                                                            (
+                                                                <span key={index} className="text-muted-foreground">
+                                                                    {word}{index === segmentObj.Description.split(" ").length - 1 ? "" : " "}
+                                                                </span>
+                                                            )
+                                                        )
+                                                    )
+                                                })
+                                            }
+
+                                            <p className="text-base font-bold mt-3">
+                                                {segmentObj.Suggestion ? segmentObj.Suggestion : `You are on the right track with your ${segmentObj.Skill} skills. Keep up the good work!`}
+                                            </p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            )})}
                             
-                            <AccordionItem value='suggestion1' className="suggest-segment">
-                                <AccordionTrigger className="text-base text-muted-foreground font-semibold rounded-md hover:text-black hover:no-underline hover:bg-slate-100 px-3 py-3">
-                                    <div className="flex items-center mb-0">
-                                        <p className="mb-0">
-                                            Problem Solving
-                                        </p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <p className="text-md text-muted-foreground">
-                                        You have scored 4.0 in Problem Solving. To improve your skills, we suggest you to practice more problems on LeetCode.
-                                    </p>
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem value="suggestion2">
-                                <AccordionTrigger className="mt-3 py-2 hover:no-underline">
-                                    <div className="flex items-center">
-                                        <p className="text-lg text-muted-foreground font-semibold mb-2">Algorithms</p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <p className="text-md text-muted-foreground">
-                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
-                                    </p>
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem value="suggestion3">
-                                <AccordionTrigger className="mt-3 py-2">
-                                    <div className="flex items-center">
-                                        <p className="text-lg font-semibold mb-2">Data Structures</p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <p className="text-md text-muted-foreground">
-                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
-                                    </p>
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem value="suggestion4">
-                                <AccordionTrigger className="mt-3 py-2">
-                                    <div className="flex items-center">
-                                        <p className="text-lg font-semibold mb-2">Cosing Skills</p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <p className="text-md text-muted-foreground">
-                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
-                                    </p>
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem value="suggestion3">
-                                <AccordionTrigger className="mt-3 py-2">
-                                    <div className="flex items-center">
-                                        <p className="text-lg font-semibold mb-2">Complexity Analysis</p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <p className="text-md text-muted-foreground">
-                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
-                                    </p>
-                                </AccordionContent>
-                            </AccordionItem>
-
-                            <AccordionItem value="suggestion3">
-                                <AccordionTrigger className="mt-3 py-2">
-                                    <div className="flex items-center">
-                                        <p className="text-lg font-semibold mb-2">Communication</p>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                    <p className="text-md text-muted-foreground">
-                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
-                                    </p>
-                                </AccordionContent>
-                            </AccordionItem>
-
                         </Accordion>
+                    
                     </TabsContent>
         
 
