@@ -1,0 +1,843 @@
+"use client";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger
+} from "@/components/ui/tabs";
+import {
+    Card,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger
+} from "@/components/ui/accordion";
+import AudioCard from "@/components/ui/AudioCard";
+import RadarChart from "@/components/charts/RadarCharts";
+import { useEffect, useState, useRef, FC } from "react";
+import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import AudioTranscript from "@/components/ui/AudioTranscript";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'chart.js/auto';
+import { ChartOptions } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import 'react-circular-progressbar/dist/styles.css';
+import { Rating } from "react-simple-star-rating";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+
+export default function Home() {
+
+    const [currentRatings, setCurrentRatings] = useState<number[]>([]);
+    const [pastRatings, setPastRatings] = useState<number[]>([]);
+
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const audioRef = useRef<HTMLAudioElement>(null);
+    
+    const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
+    const [audioDuration, setAudioDuration] = useState<number>(0);
+    const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
+    const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+
+    //Overview Tab State Variables
+    const [percentileData, setPercentileData] = useState({
+        "Result" : "N/A",
+        "Position": "Full-Stack Engineer (NextJS)",
+        "User": "Yashh Jaggi",
+        "Date": "April 12, 2024",
+        "TimeTaken": "1 hour 30 minutes",
+        "PercentileData": {
+            "CandidateScore": 4.0,
+            "TotalUsers": 50,
+            "UserDistribution": [
+                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0 },
+                { "Percentile": "1 - 2", "UserCount": 15, "PercentileBucket": 40, "LowerPercentileBucket": 11},
+                { "Percentile": "2 - 3", "UserCount": 20, "PercentileBucket": 70, "LowerPercentileBucket": 41},
+                { "Percentile": "3 - 4", "UserCount": 7, "PercentileBucket": 94, "LowerPercentileBucket": 71},
+                { "Percentile": "4 - 5", "UserCount": 3, "PercentileBucket": 100, "LowerPercentileBucket": 95},
+            ]
+        }
+    });
+    
+    const [overviewObj, setOverviewObj] = useState({
+        "Result" : "Learning",
+        "Position": "Full-Stack Engineer (NextJS)",
+        "User": "Yashh Jaggi",
+        "Date": "April 12, 2024",
+        "TimeTaken": "1 hour 30 minutes",
+        "PercentileData": {
+            "CandidateScore": 4.0,
+            "TotalUsers": 50,
+            "UserDistribution": [
+                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0 },
+                { "Percentile": "1 - 2", "UserCount": 15, "PercentileBucket": 40, "LowerPercentileBucket": 11},
+                { "Percentile": "2 - 3", "UserCount": 20, "PercentileBucket": 70, "LowerPercentileBucket": 41},
+                { "Percentile": "3 - 4", "UserCount": 7, "PercentileBucket": 94, "LowerPercentileBucket": 71},
+                { "Percentile": "4 - 5", "UserCount": 3, "PercentileBucket": 100, "LowerPercentileBucket": 95},
+            ]
+        }
+    });
+
+    const [segmentChunks, setSegmentChunks] = useState([ 
+        [
+            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0}, 
+            {"Skill": "Algorithms", "Rating": 2.0, "AveragePastRating": 3.0}, 
+            {"Skill": "Data Structures", "Rating": 3.0, "AveragePastRating": 2.0},
+        ],
+        [ 
+            {"Skill": "Coding Skills", "Rating": 1.0, "AveragePastRating": 3.0},  
+            {"Skill": "Complexity Analysis", "Rating": 4.0, "AveragePastRating": 4.0},
+            {"Skill": "Communication Skills", "Rating": 3.0, "AveragePastRating": 3.0},
+        ],
+    ]);
+
+    //Past Performance Tab State Variables
+    const [radarChartLabels, setRadarChartLabels] = useState<string[]>([]);
+    const [pastPerformanceObj, setPastPerformanceObj] = useState({
+        "Overperformance": [
+            {"Skill": "Problem Solving", "CurrentRating": 4.0, "AveragePastRating": 2.0},
+            {"Skill": "Data Structures", "CurrentRating": 3.0, "AveragePastRating": 2.0},
+        ],
+        "Underperformance": [
+            {"Skill": "Algorithms", "CurrentRating": 2.0, "AveragePastRating": 3.0},
+            {"Skill": "Coding Skills", "CurrentRating": 1.0, "AveragePastRating": 3.0},
+        ]
+    });
+
+    const progressValue = (4/5)*100;
+
+
+    useEffect(() => {
+
+        let _percentileLabels: string[] = [];
+        let _userCount: number[] = [];
+        for (let i = 0; i < overviewObj.PercentileData.UserDistribution.length; i++) {
+            _percentileLabels.push(overviewObj.PercentileData.UserDistribution[i].Percentile);
+            _userCount.push(overviewObj.PercentileData.UserDistribution[i].UserCount);
+        }
+
+        const _percentileData = {
+            labels: _percentileLabels,
+            datasets: [
+                {
+                    label: 'User Count',
+                    data: _userCount,
+                    backgroundColor: [
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 1)",
+                        "rgba(24, 24, 27, 0.6)",
+                    ],
+                    borderColor: [
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 1)",
+                        "rgba(24, 24, 27, 0.6)",
+                    ],
+                    borderWidth: 0,
+                    hoverBackgroundColor: [
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 0.6)",
+                        "rgba(24, 24, 27, 1)",
+                        "rgba(24, 24, 27, 0.6)",
+                    ],
+                    hoverBorderColor: 'rgba(75,192,192,1)',
+                }
+            ],
+        }
+        //setPercentileData(_percentileData);
+    }, []);
+
+    const percentile_data = {
+        labels: ['0 - 1', '1-2', '2 - 3', '3 - 4', '4 - 5'],
+        datasets: [
+          {
+            label: 'User Count',
+            backgroundColor: [
+                "rgba(24, 24, 27, 0.3)",
+                "rgba(24, 24, 27, 0.3)",
+                "rgba(24, 24, 27, 0.3)",
+                "rgba(24, 24, 27, 0.7)",
+                "rgba(24, 24, 27, 0.3)",
+            ],
+            hoverBackgroundColor: [
+                "rgba(24, 24, 27, 0.6)",
+                "rgba(24, 24, 27, 0.6)",
+                "rgba(24, 24, 27, 0.6)",
+                "rgba(24, 24, 27, 1)",
+                "rgba(24, 24, 27, 0.6)",
+            ],
+            data: [5, 15, 20, 7, 3],
+          },
+        ],
+    };
+
+    const percentile_options  = {
+        
+        scales: {
+            x: {
+                grid: { display: false, },
+                title: {
+                    display: true,
+                    text: 'Overall Score',
+                    color: 'black',
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    },
+                },
+            },
+            y: {
+                grid: { display: false, },
+                title: {
+                    display: true,
+                    text: 'User Count',
+                    color: 'black',
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    },
+                },
+            },
+        },
+        legend: {
+            display: false,
+        },
+        
+    };
+
+    useEffect(() => {
+
+        let _skills: string[] = [];
+        let _currentRatings: number[] = [];
+        let _pastRatings: number[] = [];
+        
+        for (let chunk of segmentChunks) 
+        {
+            for (let segment of chunk) {
+                _skills.push(segment.Skill);
+                _currentRatings.push(segment.Rating);
+                _pastRatings.push(segment.AveragePastRating);
+            }
+        }
+
+        setRadarChartLabels(_skills);
+        setCurrentRatings(_currentRatings);
+        setPastRatings(_pastRatings);
+    }, []);
+
+    const handleAudioDrawer = async() => {
+        setAudioSrc("sample_audio2.mp3");
+        setIsDrawerOpen(!isDrawerOpen);
+    };
+
+    const handleDrawerClose = () => {
+        setIsAudioPlaying(false);
+        setIsDrawerOpen(false);
+    };
+    
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-between p-12">
+        
+            <div className="row z-10 max-w-5xl w-full items-center justify-between text-sm lg:flex">
+                
+                <Tabs defaultValue="Tab1">
+                    
+                    <TabsList>
+                        <TabsTrigger value="Tab1">Overview</TabsTrigger>
+                        <TabsTrigger value="Tab2">Past Performance</TabsTrigger>
+                        <TabsTrigger value="Tab3">AI Suggests</TabsTrigger>
+                        <TabsTrigger value="Tab4">Audio & Transcript</TabsTrigger>
+                    </TabsList>
+
+
+                    <TabsContent value="Tab1" className="text-start min-h-64 font-mono">
+
+                        <ResizablePanelGroup direction="horizontal" className="gap-2 mt-3 mb-2">
+                            
+                            <ResizablePanel className="border rounded-lg" defaultSize={35} minSize={25}>
+
+                                <div className="flex border-bottom px-3 py-3 items-start">
+                                    
+                                    { overviewObj.Result === "Strong Hire" ? 
+                                        ( 
+                                            <span className="relative flex rounded-full h-9 w-9">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-shield-fill-check inline-block text-success" viewBox="0 0 16 16">
+                                                    <path fillRule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"/>
+                                                </svg>
+                                            </span>
+                                        ) : (
+                                            <span className="relative flex rounded-full h-9 w-9">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-shield-fill-exclamation text-warning" viewBox="0 0 16 16">
+                                                    <path fillRule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                                </svg>
+                                            </span>
+                                        )
+                                    }
+                                    
+                                    <div className="text-xl font-bold space-y-1">
+                                        <p className="leading-none mb-2">
+                                            {overviewObj.Result}
+                                        </p>
+                                        <p className="text-sm text-muted-foreground leadin-none">
+                                            {overviewObj.Position}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-rows-3 gap-2 px-3 pt-4 pb-4">
+                                        
+                                    <div className="flex items-center mb-2">
+                                        <span className="relative flex shrink-0 rounded-full h-9 w-9">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
+                                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                            </svg>
+                                        </span>
+
+                                        <div className="space-y-1">
+                                            <p className="text-base text-muted-foreground font-semibold leading-none mb-2">
+                                                Candidate
+                                            </p>
+                                            <p className="text-sm text-muted-foreground leadin-none">
+                                                {overviewObj.User}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center mb-2">
+                                        <span className="relative flex rounded-full h-9 w-9">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-alarm" viewBox="0 0 16 16">
+                                                <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9z"/>
+                                                <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1zm1.038 3.018a6 6 0 0 1 .924 0 6 6 0 1 1-.924 0M0 3.5c0 .753.333 1.429.86 1.887A8.04 8.04 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5M13.5 1c-.753 0-1.429.333-1.887.86a8.04 8.04 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1"/>
+                                            </svg>
+                                        </span>
+
+                                        <div className="space-y-1">
+                                            <p className="text-base text-muted-foreground font-semibold leading-none mb-2">
+                                                Time Taken
+                                            </p>
+                                            <p className="text-sm text-muted-foreground leadin-none">
+                                                {overviewObj.TimeTaken}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center mb-2">
+                                        <span className="relative flex rounded-full h-9 w-9">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-calendar-date" viewBox="0 0 16 16">
+                                                <path d="M6.445 11.688V6.354h-.633A13 13 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23"/>
+                                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                                            </svg>
+                                        </span>
+
+                                        <div className="space-y-1">
+                                            <p className="text-base text-muted-foreground font-semibold leading-none mb-2">
+                                                Date
+                                            </p>
+                                            <p className="text-sm text-muted-foreground leadin-none">
+                                                {overviewObj.Date}
+                                            </p>
+                                        </div>
+                                    </div>
+                                
+                                </div>
+
+                            </ResizablePanel>
+
+                            <ResizableHandle withHandle className="bg-border-transparent"/>
+
+                            <ResizablePanel className="border rounded-lg" defaultSize={65} minSize={40}>
+
+                                <div className="flex px-3 py-3 items-start">
+                                    <span className="relative flex rounded-full h-9 w-9">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-bar-chart" viewBox="0 0 16 16">
+                                            <path d="M4 11H2v3h2zm5-4H7v7h2zm5-5v12h-2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1z"/>
+                                        </svg>
+                                    </span>
+                                    <div className="text-xl text-muted-foreground font-bold space-y-1">
+                                        <p className="leading-none mb-2">
+                                            Where You Stand?
+                                        </p>
+                                        <p className="text-sm text-muted-foreground leadin-none">
+                                            You are between 71 - 94 percentile.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <Bar data={percentile_data} options={percentile_options} className="px-3 pb-3"/>
+
+                                {/*
+                                    <div className="grid grid-flow-row gap-4 px-3 py-3">
+                                        
+                                        <div className="border rounded-lg">
+                                            <CircularProgressbar value={progressValue} text={`4/5`} />
+                                        </div>
+                                        
+                                    </div>
+                                */}
+                            </ResizablePanel>
+
+                        </ResizablePanelGroup>
+
+                        <div className="grid grid-rows-2 gap-2 mt-4 tracking-light">
+                            
+                            {
+                                segmentChunks.map((segmentChunk, index) => {
+                                    return (
+                                        <div className="grid grid-cols-3 gap-4" key={index}>
+                                            {
+                                                segmentChunk.map((segment, index) => {
+                                                    return (
+                                                        <Card className="border rounded-xl" key={index}>
+                                                            <CardHeader className="px-4 py-2">
+                                                                <CardTitle>
+                                                                    <p className="text-lg">
+                                                                        {segment.Skill}
+                                                                    </p>
+                                                                    <Rating
+                                                                        initialValue={segment.Rating}
+                                                                        size={30}
+                                                                        fillColor={segment.Rating > 3 ? "rgba(33, 37, 41, 1)" : (segment.Rating > 2 ? "rgba(33, 37, 41, 0.5)" : "rgba(33, 37, 41, 0.3)")}
+                                                                        tooltipStyle={{
+                                                                            backgroundColor: "rgba(33, 37, 41, 0.0)",
+                                                                            color: "rgba(100, 116, 139, 1)",
+                                                                            fontSize: "1rem !important",
+                                                                            paddingLeft: "0.5rem !important",
+                                                                            paddingRight: "0.5rem !important",
+                                                                        }}
+                                                                        readonly={true}
+                                                                        className="rating-stars"
+                                                                    />
+                                                                </CardTitle>
+                                                            </CardHeader>
+                                                        </Card>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+
+                    </TabsContent>
+
+
+                    <TabsContent value="Tab2">
+
+                        <ResizablePanelGroup direction="horizontal" className="mb-2">
+                            
+                            <ResizablePanel className="rounded-lg text-center" minSize={50}>
+                                <RadarChart 
+                                    chartLabel={"Current Performance"}
+                                    labels={radarChartLabels}
+                                    currentRating={currentRatings}
+                                    pastRating={pastRatings}
+                                />
+                            </ResizablePanel>
+
+                            <ResizableHandle className="bg-border-transparent" disabled/>
+
+                            <ResizablePanel className="border rounded-2" minSize={50}>
+                                            
+                                <p className="text-xl text-muted-foreground font-bold px-4 my-3">
+                                    Benchmarking Against Your Former Self
+                                </p>
+
+
+                                <div className="mx-3 px-4 py-3">
+                                    
+                                    <p className="text-base font-bold text-green-700"> Outperformance </p>
+
+                                    <Table className="mx-3">
+                                        <TableBody>
+                                            { pastPerformanceObj.Overperformance.map((segmentObj, index) => {
+                                                return (
+                                                    <TableRow key={index}>
+                                                        <TableCell className="p-3 font-bold">
+                                                            {segmentObj.Skill}
+                                                        </TableCell>
+                                                        <TableCell className="p-3 text-xs">
+                                                            <strong className="text-base">+{segmentObj.CurrentRating - segmentObj.AveragePastRating}</strong> point gain from past
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )})
+                                            }
+                                        </TableBody>
+                                    </Table>
+
+                                </div>
+
+
+                                <div className="mx-3 px-4 py-3">
+                                    
+                                    <p className="text-base font-bold text-red-700"> Underperformance </p>
+
+                                    <Table className="mx-3">
+                                        <TableBody>
+                                            { pastPerformanceObj.Underperformance.map((segmentObj, index) => {
+                                                return (
+                                                    <TableRow>
+                                                        <TableCell className="p-3 font-bold">
+                                                            {segmentObj.Skill}
+                                                        </TableCell>
+                                                        <TableCell className="p-3 text-xs">
+                                                            <strong className="text-base">{segmentObj.CurrentRating - segmentObj.AveragePastRating}</strong> point loss from past
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )})
+                                            }
+                                        </TableBody>
+                                    </Table>
+
+                                </div>
+                            
+                            </ResizablePanel>
+
+                        </ResizablePanelGroup>
+
+                        
+                    </TabsContent>
+
+
+                    <TabsContent value="Tab3" className="text-start mt-3 px-3">
+                        
+                        <p className="text-xl font-semibold">Quick Suggestions</p>
+
+                        <div className="grid grid-cols-4 gap-3">
+                            
+                            <Card className="border rounded-lg col-span-1">
+            
+                                <CardHeader className="p-0"></CardHeader>                    
+                                <CardDescription className="px-3 pt-4 pb-0">
+                                    <div className="flex items-center align-items-center">
+                                        <span className=" relative h-9 w-6 text-green-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-check" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"/>
+                                            </svg>
+                                        </span>
+                                        <p className="text-lg font-bold">
+                                            Algorithms
+                                        </p>
+                                    </div>
+                                    <p className="text-md text-muted-foreground">
+                                       Solid understanding of sorting and string comparision algorithm.
+                                    </p>
+                                </CardDescription>
+
+                            </Card>
+
+                            <Card className="border rounded-lg col-span-1">
+                                
+                                <CardHeader className="p-0"></CardHeader>
+                                <CardDescription className="px-3 pt-4 pb-0">
+                                    <div className="flex items-center align-items-center">
+                                        <span className=" relative h-9 w-6 text-green-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-check" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"/>
+                                            </svg>
+                                        </span>
+                                        <p className="text-lg font-bold">
+                                            Coding
+                                        </p>
+                                    </div>
+                                    <p className="text-md text-muted-foreground">
+                                       Strong capability to write clean, well-structured code with no syntax errors.
+                                    </p>
+                                </CardDescription>
+                            </Card>
+
+                            <Card className="border rounded-lg col-span-1">
+                                
+                                <CardHeader className="p-0"></CardHeader>
+                                <CardDescription className="px-3 pt-4 pb-0">
+                                    <div className="flex items-center align-items-center">
+                                        <span className=" relative h-9 w-6 text-orange-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                            </svg>
+                                        </span>
+                                        <p className="text-lg font-bold">
+                                            Communication
+                                        </p>
+                                    </div>
+                                    <p className="text-md text-muted-foreground">
+                                       Some explanations were unclear and repetitive. We suggest to focus on clear and concise communication.
+                                    </p>
+                                </CardDescription>
+                            </Card>
+
+                        </div>
+
+                        <Accordion type="multiple" className="mt-4">
+                            
+                            <AccordionItem value='suggestion1' className="suggest-segment">
+                                <AccordionTrigger className="text-base text-muted-foreground font-semibold rounded-md hover:text-black hover:no-underline hover:bg-slate-100 px-3 py-3">
+                                    <div className="flex items-center mb-0">
+                                        <p className="mb-0">
+                                            Problem Solving
+                                        </p>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <p className="text-md text-muted-foreground">
+                                        You have scored 4.0 in Problem Solving. To improve your skills, we suggest you to practice more problems on LeetCode.
+                                    </p>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="suggestion2">
+                                <AccordionTrigger className="mt-3 py-2 hover:no-underline">
+                                    <div className="flex items-center">
+                                        <p className="text-lg text-muted-foreground font-semibold mb-2">Algorithms</p>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <p className="text-md text-muted-foreground">
+                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
+                                    </p>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="suggestion3">
+                                <AccordionTrigger className="mt-3 py-2">
+                                    <div className="flex items-center">
+                                        <p className="text-lg font-semibold mb-2">Data Structures</p>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <p className="text-md text-muted-foreground">
+                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
+                                    </p>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="suggestion4">
+                                <AccordionTrigger className="mt-3 py-2">
+                                    <div className="flex items-center">
+                                        <p className="text-lg font-semibold mb-2">Cosing Skills</p>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <p className="text-md text-muted-foreground">
+                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
+                                    </p>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="suggestion3">
+                                <AccordionTrigger className="mt-3 py-2">
+                                    <div className="flex items-center">
+                                        <p className="text-lg font-semibold mb-2">Complexity Analysis</p>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <p className="text-md text-muted-foreground">
+                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
+                                    </p>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                            <AccordionItem value="suggestion3">
+                                <AccordionTrigger className="mt-3 py-2">
+                                    <div className="flex items-center">
+                                        <p className="text-lg font-semibold mb-2">Communication</p>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    <p className="text-md text-muted-foreground">
+                                        You have scored 2.0 in Algorithms. To improve your skills, we suggest you to practice more problems on LeetCode.
+                                    </p>
+                                </AccordionContent>
+                            </AccordionItem>
+
+                        </Accordion>
+                    </TabsContent>
+        
+
+                    <TabsContent value="Tab4"  className="text-start mt-3 px-3 pb-5">
+                        <h2 className="text-2xl font-semibold tracking-light">Listen Now</h2>
+                        <div className="border-bottom"></div>
+
+                        <p className="text-md mt-5 mb-4"> 
+                            We have broken the interview into 6 segments. This will help you dive into the specifics much faster. 
+                        </p>
+
+                        <Drawer open={isDrawerOpen} onClose={handleDrawerClose}>
+
+                            <DrawerContent>
+                                
+                                <div className="mt-2 pe-5 text-end">
+                                    <button className="btn btn-light text-xl" onClick={handleDrawerClose}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
+                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div className="row mt-2">
+                                    
+                                    <div className="col-3">
+                                    </div>
+
+                                    <div className="col-6">
+
+                                        <div className="grid grid-cols-12 audio-controls">
+                                        
+                                            {  isAudioReady && audioSrc ? 
+                                                ( !isAudioPlaying ? 
+                                                    (
+                                                        <span
+                                                            className="flex rounded-full bg-black h-10 w-10 items-center justify-center border-4 border-muted bg-success cursor-pointer"
+                                                            onClick={() => audioRef.current?.play()}
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-play-fill text-light" viewBox="0 0 16 16">
+                                                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                                                            </svg>
+                                                        </span>
+                                                    ) : 
+                                                    (
+                                                        <span 
+                                                            className="flex rounded-full bg-black h-10 w-10 items-center justify-center border-4 border-muted bg-success cursor-pointer"
+                                                            onClick={() => audioRef.current?.pause()}
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pause-fill text-light" viewBox="0 0 16 16">
+                                                                <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                                                            </svg>
+                                                        </span>
+                                                    )
+                                                ): 
+                                                null
+                                            }
+
+                                            <div className="col-span-11">
+                                                <DrawerTitle>Problem Solving</DrawerTitle>
+                                                <DrawerDescription>April 8, 2024</DrawerDescription>
+                                            </div>
+
+                                        </div>
+
+                                        <div className="row audio-duration"></div>
+                                        
+                                        <div className="row text-center">
+                                            
+                                            <audio 
+                                                controls 
+                                                ref={audioRef} 
+                                                src={audioSrc} 
+                                                preload="metadata"
+                                                onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
+                                                onCanPlay={(e) => setIsAudioReady(true)}
+                                                onPlaying={() => setIsAudioPlaying(true)}
+                                                onPause={() => setIsAudioPlaying(false)}
+                                            >
+                                            </audio>
+                                        </div>
+
+                                        <div className="row mt-3 pb-5">
+                                            <p className="text-muted-foreground font-semibold h-fit">Transcript</p>
+                                        
+                                            <div className="row transcript-section min-h-64 max-h-64 overflow-auto">
+                                                <AudioTranscript
+                                                    text="Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools." 
+                                                    speed={50} 
+                                                />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                
+                                    <div className="col-3 text-end"></div>
+
+                                </div>
+
+                            </DrawerContent>
+
+                        </Drawer>
+                            
+                        <div className="grid grid-cols-3 gap-4 mt-3">
+
+                            <div 
+                                className="col-span-1 card-container cursor-pointer" 
+                                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                            >
+                                <AudioCard title="Problem Solving" date="April 8, 2024" />
+                            </div>
+                            
+                            <div 
+                                className="col-span-1 card-container cursor-pointer" 
+                                onClick={handleAudioDrawer}
+                            >
+                                <AudioCard title="Algorithms" date="April 8, 2024"/>
+                            </div>
+
+                            <div 
+                                className="col-span-1 card-container cursor-pointer" 
+                                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                            >
+                                <AudioCard title="Data Structures" date="April 8, 2024"/>
+                            </div>
+
+                        </div>
+                            
+                        <div className="grid grid-cols-3 gap-4 mt-3">
+                            
+                            <div 
+                                className="col-span-1 card-container cursor-pointer" 
+                                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                            >
+                                <AudioCard title="Coding Skills" date="April 8, 2024"/>
+                            </div>
+
+                            <div 
+                                className="col-span-1 card-container cursor-pointer" 
+                                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                            >
+                                <AudioCard title="Complexity Analysis" date="April 8, 2024"/>
+                            </div>
+
+                            <div 
+                                className="col-span-1 card-container cursor-pointer" 
+                                onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+                            >
+                                <AudioCard title="Communication Skills" date="April 8, 2024"/>
+                            </div>
+                            
+                        </div>
+        
+                    </TabsContent>
+                </Tabs>
+                
+            </div>
+
+            {/*---------Yashh Footer----------------- */}
+            <div className="mt-5 mb-0 grid text-center">
+                <span className={`m-0 max-w-[40ch] text-base opacity-50`}>
+                    Designed and Implemented by {" "}  
+                    <a
+                        href="https://yashhjaggi1998.github.io/portfolio_yashh"
+                        target="_blank"
+                        className="text-decoration-none"
+                    >
+                        Yashh Jaggi
+                    </a>
+                </span>
+            </div>
+
+        </main>
+    );
+}
