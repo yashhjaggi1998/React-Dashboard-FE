@@ -4,7 +4,7 @@ interface AudioProgressProps {
     audioSrc: string;
 }
 
-export const AudioProgress: FC<AudioProgressProps> = (audioSrc) => {
+export const AudioProgress: FC<AudioProgressProps> = ({ audioSrc }) => {
 
     return (
         <div className="audio-progress">

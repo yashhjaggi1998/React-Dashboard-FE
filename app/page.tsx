@@ -455,7 +455,7 @@ export default function Home() {
                                         <TableBody>
                                             { pastPerformanceObj.Underperformance.map((segmentObj, index) => {
                                                 return (
-                                                    <TableRow>
+                                                    <TableRow key={segmentObj.Skill}>
                                                         <TableCell className="p-3 font-bold">
                                                             {segmentObj.Skill}
                                                         </TableCell>
@@ -551,7 +551,7 @@ export default function Home() {
 
                         { overviewObj.Segments.map((segmentObj, indx) => {
                             return (
-                                <AccordionItem value={`suggestion${indx+1}`} className="suggest-segment">
+                                <AccordionItem value={`suggestion${indx+1}`} className="suggest-segment" key={`suggestion${indx+1}`}>
 
                                     <AccordionTrigger className="text-base text-muted-foreground font-semibold rounded-md [&[data-state=open]]:bg-slate-100 [&[data-state=open]]:text-black hover:text-black hover:no-underline hover:bg-slate-100 px-3 py-3">
                                         <p className="mb-0"> {segmentObj.Skill} </p>
