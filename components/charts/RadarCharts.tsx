@@ -75,6 +75,7 @@ const RadarChart: FC<RadarChartProps> = (props): JSX.Element => {
 				scales: {
 					r: {
 						suggestedMin: 0,
+						suggestedMax: 5,
 					},
 				},
 			}} 
