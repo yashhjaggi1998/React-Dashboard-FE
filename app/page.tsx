@@ -60,10 +60,10 @@ export default function Home() {
             "TotalUsers": 50,
             "UserDistribution": [
                 { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0, isUser: false },
-                { "Percentile": "1 - 2", "UserCount": 15, "PercentileBucket": 40, "LowerPercentileBucket": 11, isUser: false },
-                { "Percentile": "2 - 3", "UserCount": 20, "PercentileBucket": 70, "LowerPercentileBucket": 41, isUser: false },
-                { "Percentile": "3 - 4", "UserCount": 7, "PercentileBucket": 94, "LowerPercentileBucket": 71, isUser: true,},
-                { "Percentile": "4 - 5", "UserCount": 3, "PercentileBucket": 100, "LowerPercentileBucket": 95, isUser: false },
+                { "Percentile": "1 - 2", "UserCount": 15, "UpperPercentileBucket": 40, "LowerPercentileBucket": 11, isUser: false },
+                { "Percentile": "2 - 3", "UserCount": 20, "UpperPercentileBucket": 70, "LowerPercentileBucket": 41, isUser: false },
+                { "Percentile": "3 - 4", "UserCount": 7, "UpperPercentileBucket": 94, "LowerPercentileBucket": 71, isUser: true,},
+                { "Percentile": "4 - 5", "UserCount": 3, "UpperPercentileBucket": 100, "LowerPercentileBucket": 95, isUser: false },
             ]
         },
         "Segments": [
@@ -77,6 +77,9 @@ export default function Home() {
     });
 
     //Overview Tab State Variables
+    const [percentileLowerBound, setPercentileLowerBound] = useState<number>(-1);
+    const [percentileUpperBound, setPercentileUpperBound] = useState<number>(-1);
+
     const [percentileData, setPercentileData] = useState<undefined | {
         labels: string[];
         datasets: {
@@ -130,9 +133,12 @@ export default function Home() {
             _percentileLabels.push(bin.Percentile);
             _userCount.push(bin.UserCount);
             
-            if(bin.isUser) {
+            if(bin.isUser) 
+            {
                 _backgroundColor.push("rgba(24, 24, 27, 0.7)");
                 _hoverBackgroundColor.push("rgba(24, 24, 27, 1)");
+                setPercentileLowerBound(bin.LowerPercentileBucket);
+                setPercentileUpperBound(bin.UpperPercentileBucket);
             } else {
                 _backgroundColor.push("rgba(24, 24, 27, 0.3)");
                 _hoverBackgroundColor.push("rgba(24, 24, 27, 0.6)");
@@ -151,6 +157,7 @@ export default function Home() {
                 }
             ],
         }
+        
         setPercentileData(_percentileData);
     }, []);
 
@@ -345,9 +352,12 @@ export default function Home() {
                                         <p className="leading-none mb-2">
                                             Where You Stand?
                                         </p>
-                                        <p className="text-sm text-muted-foreground leadin-none">
-                                            You are between 71 - 94 percentile.
-                                        </p>
+                                        { percentileLowerBound !== -1 && percentileUpperBound !== -1 ? (
+                                            <p className="text-sm text-muted-foreground leadin-none">
+                                                You are between {percentileLowerBound} - {percentileUpperBound} percentile.
+                                            </p>
+                                        ) : null}
+                                        
                                     </div>
                                 </div>
 
@@ -359,12 +369,10 @@ export default function Home() {
 
                         <div className="grid grid-rows-2 gap-2 mt-4 tracking-light">
                             
-                            {
-                                segmentChunks.map((segmentChunk, index) => {
+                            {segmentChunks.map((segmentChunk, index) => {
                                     return (
                                         <div className="grid grid-cols-3 gap-4" key={index}>
-                                            {
-                                                segmentChunk.map((segment, index) => {
+                                            {segmentChunk.map((segment, index) => {
                                                     return (
                                                         <Card className="border rounded-xl" key={index}>
                                                             <CardHeader className="px-4 py-2">
@@ -390,12 +398,10 @@ export default function Home() {
                                                             </CardHeader>
                                                         </Card>
                                                     )
-                                                })
-                                            }
+                                                })}
                                         </div>
                                     )
-                                })
-                            }
+                                })}
                         </div>
 
                     </TabsContent>
