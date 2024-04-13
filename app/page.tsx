@@ -36,132 +36,13 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 export default function Home() {
 
-    const [currentRatings, setCurrentRatings] = useState<number[]>([]);
-    const [pastRatings, setPastRatings] = useState<number[]>([]);
-
+    //Audo Tab State Variables
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-    const audioRef = useRef<HTMLAudioElement>(null);
-    
+    const audioRef = useRef<HTMLAudioElement>(null);    
     const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
     const [audioDuration, setAudioDuration] = useState<number>(0);
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-
-    //Response from backend
-    const [overviewObj, setOverviewObj] = useState({
-        "Result" : "Learning",
-        "Position": "Full-Stack Engineer (NextJS)",
-        "User": "Yashh Jaggi",
-        "Date": "April 12, 2024",
-        "TimeTaken": "1 hour 30 minutes",
-        "PercentileData": {
-            "CandidateScore": 4.0,
-            "TotalUsers": 50,
-            "UserDistribution": [
-                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0, isUser: false },
-                { "Percentile": "1 - 2", "UserCount": 15, "UpperPercentileBucket": 40, "LowerPercentileBucket": 11, isUser: false },
-                { "Percentile": "2 - 3", "UserCount": 20, "UpperPercentileBucket": 70, "LowerPercentileBucket": 41, isUser: false },
-                { "Percentile": "3 - 4", "UserCount": 7, "UpperPercentileBucket": 94, "LowerPercentileBucket": 71, isUser: true,},
-                { "Percentile": "4 - 5", "UserCount": 3, "UpperPercentileBucket": 100, "LowerPercentileBucket": 95, isUser: false },
-            ]
-        },
-        "Segments": [
-            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically,', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Algorithms", "Rating": 2.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle'], negativeSuggestionKeywords: ['edge', 'cases', 'effectively']},
-            {"Skill": "Data Structures", "Rating": 3.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Coding Skills", "Rating": 1.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Complexity Analysis", "Rating": 4.0, "AveragePastRating": 4.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Communication Skills", "Rating": 3.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-        ],
-    });
-
-    //Overview Tab State Variables
-    const [percentileLowerBound, setPercentileLowerBound] = useState<number>(-1);
-    const [percentileUpperBound, setPercentileUpperBound] = useState<number>(-1);
-
-    const [percentileData, setPercentileData] = useState<undefined | {
-        labels: string[];
-        datasets: {
-            label: string;
-            data: number[];
-            borderWidth: number;
-            backgroundColor: string[];
-            hoverBackgroundColor: string[];
-        }[];
-    }>(undefined);
-   
-
-    const [segmentChunks, setSegmentChunks] = useState([ 
-        [
-            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0}, 
-            {"Skill": "Algorithms", "Rating": 2.0, "AveragePastRating": 3.0}, 
-            {"Skill": "Data Structures", "Rating": 3.0, "AveragePastRating": 2.0},
-        ],
-        [ 
-            {"Skill": "Coding Skills", "Rating": 1.0, "AveragePastRating": 3.0},  
-            {"Skill": "Complexity Analysis", "Rating": 4.0, "AveragePastRating": 4.0},
-            {"Skill": "Communication Skills", "Rating": 3.0, "AveragePastRating": 3.0},
-        ],
-    ]);
-
-    //Past Performance Tab State Variables
-    const [radarChartLabels, setRadarChartLabels] = useState<string[]>([]);
-    const [pastPerformanceObj, setPastPerformanceObj] = useState({
-        "Overperformance": [
-            {"Skill": "Problem Solving", "CurrentRating": 4.0, "AveragePastRating": 2.0},
-            {"Skill": "Data Structures", "CurrentRating": 3.0, "AveragePastRating": 2.0},
-        ],
-        "Underperformance": [
-            {"Skill": "Algorithms", "CurrentRating": 2.0, "AveragePastRating": 3.0},
-            {"Skill": "Coding Skills", "CurrentRating": 1.0, "AveragePastRating": 3.0},
-        ]
-    });
-
-    const progressValue = (4/5)*100;
-
-
-    useEffect(() => {
-
-        let _percentileLabels: string[] = [];
-        let _userCount: number[] = [];
-        let _backgroundColor: string[] = [];
-        let _hoverBackgroundColor: string[] = [];
-
-        for (let bin of overviewObj.PercentileData.UserDistribution) 
-        {
-            _percentileLabels.push(bin.Percentile);
-            _userCount.push(bin.UserCount);
-            
-            if(bin.isUser) 
-            {
-                _backgroundColor.push("rgba(24, 24, 27, 0.7)");
-                _hoverBackgroundColor.push("rgba(24, 24, 27, 1)");
-                setPercentileLowerBound(bin.LowerPercentileBucket);
-                setPercentileUpperBound(bin.UpperPercentileBucket);
-            } else {
-                _backgroundColor.push("rgba(24, 24, 27, 0.3)");
-                _hoverBackgroundColor.push("rgba(24, 24, 27, 0.6)");
-            }
-        }
-
-        const _percentileData = {
-            labels: _percentileLabels,
-            datasets: [
-                {
-                    label: 'User Count',
-                    data: _userCount,
-                    borderWidth: 0,
-                    backgroundColor: _backgroundColor,
-                    hoverBackgroundColor: _hoverBackgroundColor,
-                }
-            ],
-        }
-        
-        setPercentileData(_percentileData);
-    }, []);
-
-    
 
     const percentile_options: ChartOptions<'bar'>  = {
         responsive: true,
@@ -195,29 +76,157 @@ export default function Home() {
                     },
                 },
             },
-        },
-        
+        },  
     };
+
+    //Response from backend
+    const [overviewObj, setOverviewObj] = useState({
+        "Result" : "Learning",
+        "Position": "Full-Stack Engineer (NextJS)",
+        "User": "Yashh Jaggi",
+        "Date": "April 12, 2024",
+        "TimeTaken": "1 hour 30 minutes",
+        "PercentileData": {
+            "CandidateScore": 4.0,
+            "TotalUsers": 50,
+            "UserDistribution": [
+                { "Percentile": "0 - 1", "UserCount": 5, "UpperPercentileBucket": 10, "LowerPercentileBucket": 0, isUser: false },
+                { "Percentile": "1 - 2", "UserCount": 15, "UpperPercentileBucket": 40, "LowerPercentileBucket": 11, isUser: false },
+                { "Percentile": "2 - 3", "UserCount": 20, "UpperPercentileBucket": 70, "LowerPercentileBucket": 41, isUser: false },
+                { "Percentile": "3 - 4", "UserCount": 7, "UpperPercentileBucket": 94, "LowerPercentileBucket": 71, isUser: true,},
+                { "Percentile": "4 - 5", "UserCount": 3, "UpperPercentileBucket": 100, "LowerPercentileBucket": 95, isUser: false },
+            ]
+        },
+        "Segments": [
+            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically,', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Algorithms", "Rating": 2.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle'], negativeSuggestionKeywords: ['edge', 'cases', 'effectively']},
+            {"Skill": "Data Structures", "Rating": 3.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Coding Skills", "Rating": 1.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Complexity Analysis", "Rating": 4.0, "AveragePastRating": 4.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Communication Skills", "Rating": 3.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+        ],
+    });
+
+    //Overview Tab State Variables
+    const [percentileLowerBound, setPercentileLowerBound] = useState<number>(-1);
+    const [percentileUpperBound, setPercentileUpperBound] = useState<number>(-1);
+    const [percentileData, setPercentileData] = useState<undefined | {
+        labels: string[];
+        datasets: {
+            label: string;
+            data: number[];
+            borderWidth: number;
+            backgroundColor: string[];
+            hoverBackgroundColor: string[];
+        }[];
+    }>(undefined);
+    
+   
+    //Past Performance Tab State Variables
+    const [radarChartLabels, setRadarChartLabels] = useState<string[]>([]);
+    const [currentRatings, setCurrentRatings] = useState<number[]>([]);
+    const [pastRatings, setPastRatings] = useState<number[]>([]);
+    const [overperformanceObj, setOverperformanceObj] = useState([]);
+    const [underperformanceObj, setUnderperformanceObj] = useState([]);
+    const [pastPerformanceObj, setPastPerformanceObj] = useState({
+        "Overperformance": [
+            {"Skill": "Problem Solving", "CurrentRating": 4.0, "AveragePastRating": 2.0},
+            {"Skill": "Data Structures", "CurrentRating": 3.0, "AveragePastRating": 2.0},
+        ],
+        "Underperformance": [
+            {"Skill": "Algorithms", "CurrentRating": 2.0, "AveragePastRating": 3.0},
+            {"Skill": "Coding Skills", "CurrentRating": 1.0, "AveragePastRating": 3.0},
+        ]
+    });
+
 
     useEffect(() => {
 
-        let _skills: string[] = [];
-        let _currentRatings: number[] = [];
-        let _pastRatings: number[] = [];
-        
-        for (let chunk of segmentChunks) 
-        {
-            for (let segment of chunk) {
+        function InitializeOverviewTab () {
+
+            let _percentileLabels: string[] = [];
+            let _userCount: number[] = [];
+            let _backgroundColor: string[] = [];
+            let _hoverBackgroundColor: string[] = [];
+
+            for (let bin of overviewObj.PercentileData.UserDistribution) {
+                _percentileLabels.push(bin.Percentile);
+                _userCount.push(bin.UserCount);
+                
+                if(bin.isUser) {
+                    _backgroundColor.push("rgba(24, 24, 27, 0.7)");
+                    _hoverBackgroundColor.push("rgba(24, 24, 27, 1)");
+                    setPercentileLowerBound(bin.LowerPercentileBucket);
+                    setPercentileUpperBound(bin.UpperPercentileBucket);
+                } else {
+                    _backgroundColor.push("rgba(24, 24, 27, 0.3)");
+                    _hoverBackgroundColor.push("rgba(24, 24, 27, 0.6)");
+                }
+            }
+
+            const _percentileData = {
+                labels: _percentileLabels,
+                datasets: [
+                    {
+                        label: 'User Count',
+                        data: _userCount,
+                        borderWidth: 0,
+                        backgroundColor: _backgroundColor,
+                        hoverBackgroundColor: _hoverBackgroundColor,
+                    }
+                ],
+            }
+            
+            setPercentileData(_percentileData);
+        }
+
+        function InitializePastPerformance() {
+
+            //Radar Chart Data
+            let _skills: string[] = [];
+            let _currentRatings: number[] = [];
+            let _pastRatings: number[] = [];
+
+            //Past Performance Table Data
+            let _overPerformanceObj = [];
+            let _underPerformanceObj = [];
+            
+            for (let segment of overviewObj.Segments) {
                 _skills.push(segment.Skill);
                 _currentRatings.push(segment.Rating);
                 _pastRatings.push(segment.AveragePastRating);
+
+                if (segment.Rating > segment.AveragePastRating) {
+                    _overPerformanceObj.push({
+                        "Skill": segment.Skill,
+                        "Rating": segment.Rating,
+                        "AveragePastRating": segment.AveragePastRating
+                    });
+                }
+                else if (segment.Rating < segment.AveragePastRating) {
+                    _underPerformanceObj.push({
+                        "Skill": segment.Skill,
+                        "Rating": segment.Rating,
+                        "AveragePastRating": segment.AveragePastRating
+                    });
+                }
             }
+
+            //Set Radar State Variables
+            setRadarChartLabels(_skills);
+            setCurrentRatings(_currentRatings);
+            setPastRatings(_pastRatings);
+
+            //Set Past Performance Table State Variables
+            setOverperformanceObj(_overPerformanceObj as never[]);
+            setUnderperformanceObj(_underPerformanceObj as never[]);
+    
         }
 
-        setRadarChartLabels(_skills);
-        setCurrentRatings(_currentRatings);
-        setPastRatings(_pastRatings);
+        InitializeOverviewTab();
+        InitializePastPerformance();
     }, []);
+
 
     const handleAudioDrawer = async() => {
         setAudioSrc("sample_audio2.mp3");
@@ -367,41 +376,34 @@ export default function Home() {
 
                         </ResizablePanelGroup>
 
-                        <div className="grid grid-rows-2 gap-2 mt-4 tracking-light">
-                            
-                            {segmentChunks.map((segmentChunk, index) => {
-                                    return (
-                                        <div className="grid grid-cols-3 gap-4" key={index}>
-                                            {segmentChunk.map((segment, index) => {
-                                                    return (
-                                                        <Card className="border rounded-xl" key={index}>
-                                                            <CardHeader className="px-4 py-2">
-                                                                <CardTitle>
-                                                                    <p className="text-lg">
-                                                                        {segment.Skill}
-                                                                    </p>
-                                                                    <Rating
-                                                                        initialValue={segment.Rating}
-                                                                        size={30}
-                                                                        fillColor={segment.Rating > 3 ? "rgba(33, 37, 41, 1)" : (segment.Rating > 2 ? "rgba(33, 37, 41, 0.5)" : "rgba(33, 37, 41, 0.3)")}
-                                                                        tooltipStyle={{
-                                                                            backgroundColor: "rgba(33, 37, 41, 0.0)",
-                                                                            color: "rgba(100, 116, 139, 1)",
-                                                                            fontSize: "1rem !important",
-                                                                            paddingLeft: "0.5rem !important",
-                                                                            paddingRight: "0.5rem !important",
-                                                                        }}
-                                                                        readonly={true}
-                                                                        className="rating-stars"
-                                                                    />
-                                                                </CardTitle>
-                                                            </CardHeader>
-                                                        </Card>
-                                                    )
-                                                })}
-                                        </div>
-                                    )
-                                })}
+                        <div className="grid grid-cols-3 gap-2 mt-4">
+                            {overviewObj.Segments.map((segment, index) => {
+                                return (
+                                    <Card className="border rounded-xl" key={index}>
+                                        <CardHeader className="px-4 py-2">
+                                            <CardTitle>
+                                                <p className="text-lg">
+                                                    {segment.Skill}
+                                                </p>
+                                                <Rating
+                                                    initialValue={segment.Rating}
+                                                    size={30}
+                                                    fillColor={segment.Rating > 3 ? "rgba(33, 37, 41, 1)" : (segment.Rating > 2 ? "rgba(33, 37, 41, 0.5)" : "rgba(33, 37, 41, 0.3)")}
+                                                    tooltipStyle={{
+                                                        backgroundColor: "rgba(33, 37, 41, 0.0)",
+                                                        color: "rgba(100, 116, 139, 1)",
+                                                        fontSize: "1rem !important",
+                                                        paddingLeft: "0.5rem !important",
+                                                        paddingRight: "0.5rem !important",
+                                                    }}
+                                                    readonly={true}
+                                                    className="rating-stars"
+                                                />
+                                            </CardTitle>
+                                        </CardHeader>
+                                    </Card>
+                                )})
+                            }
                         </div>
 
                     </TabsContent>
@@ -428,30 +430,28 @@ export default function Home() {
                                     Benchmarking Against Your Former Self
                                 </p>
 
-
                                 <div className="mx-3 px-4 py-3">
                                     
                                     <p className="text-base font-bold text-green-700"> Outperformance </p>
-
+                                    
                                     <Table className="mx-3">
                                         <TableBody key="OutperformanceTable">
-                                            { pastPerformanceObj.Overperformance.map((segmentObj, index) => {
+                                            {overperformanceObj.map((segmentObj: { Skill: string, Rating: number, AveragePastRating: number }, index: number) => {
                                                 return (
                                                     <TableRow key={index}>
                                                         <TableCell className="p-3 font-bold">
                                                             {segmentObj.Skill}
                                                         </TableCell>
                                                         <TableCell className="p-3 text-xs">
-                                                            <strong className="text-base">+{segmentObj.CurrentRating - segmentObj.AveragePastRating}</strong> point gain from past
+                                                            <strong className="text-base">+{segmentObj.Rating - segmentObj.AveragePastRating}</strong> point gain from past
                                                         </TableCell>
                                                     </TableRow>
-                                                )})
-                                            }
+                                                )
+                                            })}
                                         </TableBody>
                                     </Table>
 
                                 </div>
-
 
                                 <div className="mx-3 px-4 py-3">
                                     
@@ -459,14 +459,14 @@ export default function Home() {
 
                                     <Table className="mx-3">
                                         <TableBody>
-                                            { pastPerformanceObj.Underperformance.map((segmentObj, index) => {
+                                            { underperformanceObj.map((segmentObj: { Skill: string, Rating: number, AveragePastRating: number }, index: number) => {
                                                 return (
                                                     <TableRow key={segmentObj.Skill}>
                                                         <TableCell className="p-3 font-bold">
                                                             {segmentObj.Skill}
                                                         </TableCell>
                                                         <TableCell className="p-3 text-xs">
-                                                            <strong className="text-base">{segmentObj.CurrentRating - segmentObj.AveragePastRating}</strong> point loss from past
+                                                            <strong className="text-base">{segmentObj.Rating - segmentObj.AveragePastRating}</strong> point loss from past
                                                         </TableCell>
                                                     </TableRow>
                                                 )})
@@ -479,8 +479,7 @@ export default function Home() {
                             </ResizablePanel>
 
                         </ResizablePanelGroup>
-
-                        
+   
                     </TabsContent>
 
 
