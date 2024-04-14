@@ -36,14 +36,6 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 export default function Home() {
 
-    //Audo Tab State Variables
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const audioRef = useRef<HTMLAudioElement>(null);    
-    const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
-    const [audioDuration, setAudioDuration] = useState<number>(0);
-    const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
-    const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
-
     const percentile_options: ChartOptions<'bar'>  = {
         responsive: true,
         plugins: {
@@ -81,7 +73,7 @@ export default function Home() {
 
     //Response from backend
     const [overviewObj, setOverviewObj] = useState({
-        "Result" : "Learning",
+        "Result" : "Leaning Hire",
         "Position": "Full-Stack Engineer (NextJS)",
         "User": "Yashh Jaggi",
         "Date": "April 12, 2024",
@@ -98,12 +90,12 @@ export default function Home() {
             ]
         },
         "Segments": [
-            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically,', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Algorithms", "Rating": 2.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle'], negativeSuggestionKeywords: ['edge', 'cases', 'effectively']},
-            {"Skill": "Data Structures", "Rating": 3.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Coding Skills", "Rating": 1.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Complexity Analysis", "Rating": 4.0, "AveragePastRating": 4.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
-            {"Skill": "Communication Skills", "Rating": 3.0, "AveragePastRating": 3.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to continue practicing variety of problems.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically', 'considering', 'different', 'cases', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: []},
+            {"Skill": "Problem Solving", "Rating": 4.0, "AveragePastRating": 2.0, "Description": "The candidate displayed excellent problem-solving skills. They approached the problem methodically, considering different cases such as word length and identical characters. The candidate asked clarifying questions and was able to extend their solution to handle edge cases effectively.", "Suggestion": "We suggest to keep practicing, keep impressing.", positiveSuggestionKeywords: ['excellent', 'problem-solving', 'methodically,', 'asked', 'clarifying', 'questions', 'handle','edge', 'cases', 'effectively'], negativeSuggestionKeywords: [], "QuickSuggestion": "We suggest to keep practicing, keep impressing."},
+            {"Skill": "Algorithms", "Rating": 3.0, "AveragePastRating": 4.0, "Description": "The candidate demonstrated a good understanding of using a hash table to optimize the search for complement numbers, which shows a solid grasp of data structures and their applications. However, there was a repetition in explaining the approach without considering alternative algorithms or optimizations beyond the initial solution.", "Suggestion": "You might want to experiment with different algorithms while practicing. Also, consider optimizing your code further if there's room for improvement.", positiveSuggestionKeywords: ['good', 'understanding', 'using', 'hash', 'table', 'solid', 'grasp', 'data', 'structures'], negativeSuggestionKeywords: ['without', 'considering' ,'alternative', 'algorithms', 'optimizations', 'beyond', 'initial', 'solution'], "QuickSuggestion": "Consider experimenting with various algorithms while practicing and optimize your code further if possible."},
+            {"Skill": "Data Structures", "Rating": 4.0, "AveragePastRating": 3.0, "Description": "Your use of a hash table to optimize the search for complement numbers showcased a solid grasp of data structures and their applications. Your coding solution was functional and effectively utilized a hash table.", "Suggestion": "Apply hash tables to diverse problems and keep refining your understanding of data structures.", positiveSuggestionKeywords: ['solid', 'grasp', 'data', 'structures', 'solution', 'functional', 'effectively', 'utilized', 'hash', 'table'], negativeSuggestionKeywords: [], "QuickSuggestion": "Apply hash tables to solve a variety of problems while continuously refining your grasp of data structures."},
+            {"Skill": "Coding", "Rating": 4.0, "AveragePastRating": 4.0, "Description": "The candidate wrote clean, working code with no syntax errors. Their code was well-structured, making good use of data structures (a hash map) to map the alien language order. The solution was implemented efficiently, showing a strong understanding of the chosen programming language paradigms.", "Suggestion": "We are impressed with your coding skills and urge you to continue doing what you do." , positiveSuggestionKeywords: ['clean,', 'working', 'code', 'no', 'syntax', 'errors.', 'strong', 'understanding',  'chosen', 'programming'], negativeSuggestionKeywords: [], "QuickSuggestion": "We are impressed with your coding skills and urge you to continue doing what you do."},
+            {"Skill": "Complexity Analysis", "Rating": 1.0, "AveragePastRating": 3.0, "Description": "The candidate seemed unsure about how to determine the space complexity of algorithms, often providing vague or incorrect estimates without considering factors like data structures, auxiliary space, or recursive calls. Similarly, when asked about time complexity, they struggled to give precise Big O notation or analyze the time complexity of algorithms accurately. They lacked a systematic approach to breaking down the operations and evaluating their efficiency.", "Suggestion": "We suggest you to revisit to revisit the fundamentals of space and time complexity analysis. This includes understanding different data structures' space requirements, recognizing auxiliary space usage, and time complexity of recursive calls. Practice breaking down algorithms into individual operations and analyzing their efficiency to determine the overall complexity. Additionally, consider studying common time and space complexity classes like O(1), O(n), O(log n), etc., and how they apply to different algorithms.", positiveSuggestionKeywords: [], negativeSuggestionKeywords: ['unsure', 'providing', 'vague', 'incorrect', 'estimates', 'struggled', 'to', 'give', 'precise', 'big', 'oh', 'notation', 'lacked', 'systematic' , 'approach'], "QuickSuggestion": "Revisit space-time complexity basics, analyze algorithm efficiency, study common complexity classes."},
+            {"Skill": "Communication", "Rating": 2.0, "AveragePastRating": 2.0, "Description": "The candidate communicated their thought process and approach to solving the problem. However, there were instances where the explanations were unclear or repetitive. The candidate needed some guidance and clarification from the interviewer to proceed, indicating room for improvement in clear and concise communication.", "Suggestion": "Practice clear and concise explanations to improve your communication skills. Seek feedback from others to refine your communication style and actively listen for better understanding. Engaging in activities like mock interviews or public speaking can help you practice and master these skills effectively.", positiveSuggestionKeywords: [], negativeSuggestionKeywords: ['explanations', 'unclear', 'repetitive', 'needed', 'guidance'], "QuickSuggestion": "Practice concise explanations, seek feedback for communication improvement, actively listen, and engage in relevant activities."},
         ],
     });
 
@@ -128,17 +120,14 @@ export default function Home() {
     const [pastRatings, setPastRatings] = useState<number[]>([]);
     const [overperformanceObj, setOverperformanceObj] = useState([]);
     const [underperformanceObj, setUnderperformanceObj] = useState([]);
-    const [pastPerformanceObj, setPastPerformanceObj] = useState({
-        "Overperformance": [
-            {"Skill": "Problem Solving", "CurrentRating": 4.0, "AveragePastRating": 2.0},
-            {"Skill": "Data Structures", "CurrentRating": 3.0, "AveragePastRating": 2.0},
-        ],
-        "Underperformance": [
-            {"Skill": "Algorithms", "CurrentRating": 2.0, "AveragePastRating": 3.0},
-            {"Skill": "Coding Skills", "CurrentRating": 1.0, "AveragePastRating": 3.0},
-        ]
-    });
 
+     //Audo Tab State Variables
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const audioRef = useRef<HTMLAudioElement>(null);    
+    const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
+    const [audioDuration, setAudioDuration] = useState<number>(0);
+    const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
+    const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
 
     useEffect(() => {
 
@@ -487,68 +476,58 @@ export default function Home() {
                         
                         <p className="text-xl font-semibold">Quick Suggestions</p>
 
-                        <div className="grid grid-cols-4 gap-3">
+                        <div className="grid grid-cols-3 gap-3">
                             
-                            <Card className="border rounded-lg col-span-1">
-            
-                                <CardHeader className="p-0"></CardHeader>                    
-                                <CardDescription className="px-3 pt-4 pb-0">
-                                    <div className="flex items-center align-items-center">
-                                        <span className=" relative h-9 w-6 text-green-700">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-check" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"/>
-                                            </svg>
-                                        </span>
-                                        <p className="text-lg font-bold">
-                                            Algorithms
-                                        </p>
-                                    </div>
-                                    <p className="text-md text-muted-foreground">
-                                       Solid understanding of sorting and string comparision algorithm.
-                                    </p>
-                                </CardDescription>
-
-                            </Card>
-
-                            <Card className="border rounded-lg col-span-1">
+                            {overviewObj.Segments.map((segment, index) => {
                                 
-                                <CardHeader className="p-0"></CardHeader>
-                                <CardDescription className="px-3 pt-4 pb-0">
-                                    <div className="flex items-center align-items-center">
-                                        <span className=" relative h-9 w-6 text-green-700">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-check" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"/>
-                                            </svg>
-                                        </span>
-                                        <p className="text-lg font-bold">
-                                            Coding
-                                        </p>
-                                    </div>
-                                    <p className="text-md text-muted-foreground">
-                                       Strong capability to write clean, well-structured code with no syntax errors.
-                                    </p>
-                                </CardDescription>
-                            </Card>
+                                return segment.Rating >= 4.0 ? (
+                                    <Card className="border rounded-lg col-span-1" key={index}>
+                                        <CardHeader className="p-0"></CardHeader>
+                                        <CardDescription className="px-3 pt-4 pb-0">
+                                            <div className="flex items-center align-items-center">
+                                                <span className=" relative h-9 w-6 text-green-700">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="20"
+                                                        height="20"
+                                                        fill="currentColor"
+                                                        className="bi bi-shield-fill-check"
+                                                        viewBox="0 0 16 16"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                                <p className="text-lg font-bold">{segment.Skill}</p>
+                                            </div>
+                                            <p className="text-md text-muted-foreground">{segment.QuickSuggestion}</p>
+                                        </CardDescription>
+                                    </Card>
+                                ) : null;
+                            })}
 
-                            <Card className="border rounded-lg col-span-1">
+
+                            {overviewObj.Segments.map((segment, index) => {
                                 
-                                <CardHeader className="p-0"></CardHeader>
-                                <CardDescription className="px-3 pt-4 pb-0">
-                                    <div className="flex items-center align-items-center">
-                                        <span className=" relative h-9 w-6 text-orange-400">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-                                            </svg>
-                                        </span>
-                                        <p className="text-lg font-bold">
-                                            Communication
-                                        </p>
-                                    </div>
-                                    <p className="text-md text-muted-foreground">
-                                       Some explanations were unclear and repetitive. We suggest to focus on clear and concise communication.
-                                    </p>
-                                </CardDescription>
-                            </Card>
+                                return segment.Rating < 4.0 ? (
+                                    <Card className="border rounded-lg col-span-1" key={index}>
+                                        <CardHeader className="p-0"></CardHeader>
+                                        <CardDescription className="px-3 pt-4 pb-0">
+                                            <div className="flex items-center align-items-center">
+                                                <span className=" relative h-9 w-9 text-orange-400">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                                    </svg>
+                                                </span>
+                                                <p className="text-lg font-bold">{segment.Skill}</p>
+                                            </div>
+                                            <p className="text-md text-muted-foreground">{segment.QuickSuggestion}</p>
+                                        </CardDescription>
+                                    </Card>
+                                ) : null;
+                            })}
 
                         </div>
                         
@@ -556,18 +535,22 @@ export default function Home() {
 
                         { overviewObj.Segments.map((segmentObj, indx) => {
                             return (
-                                <AccordionItem value={`suggestion${indx+1}`} className="suggest-segment" key={`suggestion${indx+1}`}>
+                                <AccordionItem value={`suggestion${indx+1}`} className="[&[data-state=open]]:border-slate-400 suggest-segment" key={`suggestion${indx+1}`}>
 
-                                    <AccordionTrigger className="text-base text-muted-foreground font-semibold rounded-md [&[data-state=open]]:bg-slate-100 [&[data-state=open]]:text-black hover:text-black hover:no-underline hover:bg-slate-100 px-3 py-3">
-                                        <p className="mb-0"> {segmentObj.Skill} </p>
+                                    <AccordionTrigger className="text-lg text-muted-foreground font-semibold rounded-md [&[data-state=open]]:bg-slate-100 [&[data-state=open]]:text-black hover:text-black hover:no-underline hover:bg-slate-100 px-3 py-3">
+                                        <p className="mb-0"> 
+                                            {segmentObj.Skill} 
+                                        </p>
                                     </AccordionTrigger>
 
                                     <AccordionContent className="px-3">
                                         
-                                        <div className="score-container mt-4">
-                                            <p className="text-base text-muted-foreground font-semibold mb-1">
-                                                Score
-                                            </p>
+                                        <div className="score-container mt-3">
+                                            {/*
+                                                <p className="text-base text-muted-foreground font-semibold mb-1">
+                                                    Score
+                                                </p>
+                                            */}
                                             <Rating
                                                 initialValue={segmentObj.Rating}
                                                 size={20}
@@ -577,16 +560,12 @@ export default function Home() {
                                             />
                                         </div>
 
-                                        <div className="suggestion-container mt-4">
-                                            <p className="text-base text-muted-foreground font-semibold mb-3">
-                                                Suggestion
-                                            </p>
-
+                                        <div className="description-container text-base mt-3">
                                             {
                                                 segmentObj.Description.split(" ").map((word: string, index: number) => {
                                                 
-                                                    const isPositive: boolean = segmentObj.positiveSuggestionKeywords.includes(word);
-                                                    const isNegative: boolean = segmentObj.negativeSuggestionKeywords.includes(word as never);
+                                                    const isPositive: boolean = segmentObj.positiveSuggestionKeywords.includes(word.toLowerCase() as never);
+                                                    const isNegative: boolean = segmentObj.negativeSuggestionKeywords.includes(word.toLowerCase() as never);
 
                                                     return (
                                                         isPositive ?
@@ -611,11 +590,17 @@ export default function Home() {
                                                     )
                                                 })
                                             }
+                                        </div>
 
-                                            <p className="text-base font-bold mt-3">
+                                        <div className="suggestion-container mt-5">
+                                            <p className="text-lg font-extrabold mb-2">
+                                                Suggestion
+                                            </p>
+                                            <p className="text-base font-medium text-slate-800 mt-1">
                                                 {segmentObj.Suggestion ? segmentObj.Suggestion : `You are on the right track with your ${segmentObj.Skill} skills. Keep up the good work!`}
                                             </p>
                                         </div>
+
                                     </AccordionContent>
                                 </AccordionItem>
                             )})}
