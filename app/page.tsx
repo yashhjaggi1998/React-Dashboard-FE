@@ -235,7 +235,7 @@ export default function Home() {
                 
                 <Tabs defaultValue="Tab1">
                     
-                    <TabsList>
+                    <TabsList className="w-full justify-start">
                         <TabsTrigger value="Tab1">Overview</TabsTrigger>
                         <TabsTrigger value="Tab2">Past Performance</TabsTrigger>
                         <TabsTrigger value="Tab3">AI Suggests</TabsTrigger>
@@ -339,7 +339,7 @@ export default function Home() {
 
                             <ResizableHandle withHandle className="bg-border-transparent"/>
 
-                            <ResizablePanel className="border rounded-lg" defaultSize={65} minSize={40}>
+                            <ResizablePanel className="rounded-lg" defaultSize={65} minSize={40}>
 
                                 <div className="flex px-3 py-3 items-start">
                                     <span className="relative flex rounded-full h-9 w-9">
@@ -347,7 +347,7 @@ export default function Home() {
                                             <path d="M4 11H2v3h2zm5-4H7v7h2zm5-5v12h-2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1z"/>
                                         </svg>
                                     </span>
-                                    <div className="text-xl text-muted-foreground font-bold space-y-1">
+                                    <div className="text-xl font-bold space-y-1">
                                         <p className="leading-none mb-2">
                                             Where You Stand?
                                         </p>
@@ -499,6 +499,7 @@ export default function Home() {
                                                     d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793z"
                                                 />
                                             </svg>
+
                                             <span className="text-lg text-muted-foreground font-bold ms-2">{segment.Skill}</span>
                                         </CardDescription>
                                         <CardFooter>
@@ -514,17 +515,17 @@ export default function Home() {
                                 return segment.Rating < 4.0 ? (
                                     <Card className="border rounded-lg col-span-1" key={index}>
                                         <CardHeader className="p-0"></CardHeader>
-                                        <CardDescription className="px-3 pt-4 pb-0">
-                                            <div className="flex items-center align-items-center">
-                                                <span className=" relative h-9 w-9 text-orange-400">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
-                                                        <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-                                                    </svg>
-                                                </span>
-                                                <p className="text-lg font-bold ">{segment.Skill}</p>
-                                            </div>
-                                            <p className="text-md text-muted-foreground">{segment.QuickSuggestion}</p>
+                                        <CardDescription className="flex items-center align-items-center relative text-orange-400 px-3 pt-3 pb-0">
+                                                
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-shield-fill-exclamation" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.8 11.8 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7 7 0 0 0 1.048-.625 11.8 11.8 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 63 63 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m-.55 8.502L7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0M8.002 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                            </svg>
+
+                                            <span className="text-lg text-muted-foreground font-bold ms-2">{segment.Skill}</span>
                                         </CardDescription>
+                                        <CardFooter>
+                                            <p className="text-md text-muted-foreground">{segment.QuickSuggestion}</p>
+                                        </CardFooter>
                                     </Card>
                                 ) : null;
                             })}
