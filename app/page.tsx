@@ -502,7 +502,7 @@ export default function Home() {
 
                                             <span className="text-lg text-muted-foreground font-bold ms-2">{segment.Skill}</span>
                                         </CardDescription>
-                                        <CardFooter className="text-md text-muted-foreground mt-2 p-3 pt-0">
+                                        <CardFooter className="text-md text-muted-foreground mt-2 px-4 pt-0 pb-3">
                                             {segment.QuickSuggestion}
                                         </CardFooter>
                                     </Card>
@@ -523,7 +523,7 @@ export default function Home() {
 
                                             <span className="text-lg text-muted-foreground font-bold ms-2">{segment.Skill}</span>
                                         </CardDescription>
-                                        <CardFooter className="text-md text-muted-foreground mt-2 p-3 pt-0">
+                                        <CardFooter className="text-md text-muted-foreground mt-2 px-4 pt-0 pb-3">
                                             {segment.QuickSuggestion}
                                         </CardFooter>
                                     </Card>
