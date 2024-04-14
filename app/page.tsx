@@ -475,9 +475,9 @@ export default function Home() {
 
                     <TabsContent value="Tab3" className="text-start mt-3 px-3">
                         
-                        <p className="text-xl font-semibold">Quick Suggestions</p>
+                        <p className="text-2xl font-semibold mt-2">Quick Suggestions</p>
 
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="grid grid-cols-3 gap-3 mt-3">
                             
                             {overviewObj.Segments.map((segment, index) => {
                                 
