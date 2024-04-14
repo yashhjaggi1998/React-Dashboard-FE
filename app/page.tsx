@@ -502,8 +502,8 @@ export default function Home() {
 
                                             <span className="text-lg text-muted-foreground font-bold ms-2">{segment.Skill}</span>
                                         </CardDescription>
-                                        <CardFooter>
-                                            <p className="text-md text-muted-foreground">{segment.QuickSuggestion}</p>
+                                        <CardFooter className="text-md text-muted-foreground mt-3">
+                                            {segment.QuickSuggestion}
                                         </CardFooter>
                                     </Card>
                                 ) : null;
