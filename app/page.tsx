@@ -277,6 +277,7 @@ export default function Home() {
         setAudioTitle("");
         setAudioDate("");
         setAudioTranscript([]);
+        setAudioCurrentTime(0);
 
         setIsAudioPlaying(false);
         setIsDrawerOpen(false);
