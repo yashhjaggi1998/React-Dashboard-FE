@@ -402,7 +402,7 @@ export default function Home() {
                                     {interviewData.Segments.map((segment, index) => {
                                         return (
                                             <Card className="border rounded-xl p-2" key={index}>
-                                                <CardHeader className="px-3 py-2">
+                                                <CardHeader className="px-3 pt-2 pb-3">
                                                     <CardTitle>
                                                         <p className="text-lg">
                                                             {segment.Skill}
