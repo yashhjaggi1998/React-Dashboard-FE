@@ -1,4 +1,6 @@
+import { Speaker } from 'lucide-react';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { start } from 'repl';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     
@@ -31,13 +33,43 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 QuickSuggestion: "We suggest to keep practicing, keep impressing.",
                 audioSrc: "AudioRecordings/Problem_Solving_Audio.mp3",
                 Transcript: [
-                    {   
-                        Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                    {
+                        Speaker: "Interviewer", 
+                        Text: "Let's discuss how you would approach solving the Two-Sum problem using a hash table before we move on to coding. How would you start?",
+                        StartTime: 1,
+                        EndTime: 6
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                        Text: "Sure, for the Two-Sum problem, we're given an array of integers and a target sum. We need to find two numbers in the array that add up to the target sum. One efficient approach is to use a hash table to store the numbers we've seen so far as we iterate through the array.",
+                        StartTime: 7,
+                        EndTime: 22,
+                    },
+                    {
+                        Speaker: "Interviewer",
+                        Text: "That's a good approach. How would you use the hash table to solve this problem?",
+                        StartTime: 23,
+                        EndTime: 27,
+                    },
+                    {
+                        Speaker: "User",
+                        Text: "We can iterate through the array and for each number, we'll calculate the complement (target - current number). If the complement exists in the hash table, it means we've found our pair of numbers that sum up to the target. If not, we'll add the current number to the hash table.",
+                        StartTime: 28,
+                        EndTime: 40
+
+                    },
+                    {
+                        Speaker: "Interviewer",
+                        Text: "How would you handle edge cases or special cases in this problem?",
+                        StartTime: 41,
+                        EndTime: 50
+                    },
+                    {
+                        lineId: 6,
+                        Speaker: "User",
+                        Text: "One edge case to consider is when there are no valid pairs in the array that sum up to the target. In such cases, we can return an empty list or handle it based on the problem requirements.",
+                        StartTime: 51,
+                        EndTime: 59
                     },
                 ]
             },
@@ -54,11 +86,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use",
+                        StartTime: 1,
+                        EndTime: 6,
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
+                        StartTime: 7,
+                        EndTime: 20,
                     },
                 ]
             },
@@ -75,11 +111,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use",
+                        StartTime: 0,
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
+                        StartTime: 5,
                     },
                 ]
             },
@@ -96,11 +134,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use",
+                        StartTime: 0,
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
+                        StartTime: 5,
                     },
                 ]
             },
@@ -117,11 +157,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use.",
+                        StartTime: 0,
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
+                        StartTime: 5,
                     },
                 ]
             },
