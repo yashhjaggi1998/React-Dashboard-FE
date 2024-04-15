@@ -30,6 +30,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 negativeSuggestionKeywords: [], 
                 QuickSuggestion: "We suggest to keep practicing, keep impressing.",
                 audioSrc: "AudioRecordings/Problem_Solving_Audio.mp3",
+                Transcript: [
+                    {   
+                        Speaker: "Interviewer",
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                    },
+                    {
+                        Speaker: "User",
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                    },
+                ]
             },
             {
                 Skill: "Algorithms", 
@@ -41,6 +51,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 negativeSuggestionKeywords: ['without', 'considering' ,'alternative', 'algorithms', 'optimizations', 'beyond', 'initial', 'solution'], 
                 QuickSuggestion: "Consider experimenting with various algorithms while practicing and optimize your code further if possible.",
                 audioSrc: "AudioRecordings/Algorithms_Audio.mp3",
+                Transcript: [
+                    {   
+                        Speaker: "Interviewer",
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                    },
+                    {
+                        Speaker: "User",
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                    },
+                ]
             },
             {
                 Skill: "Data Structures", 
@@ -52,6 +72,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 negativeSuggestionKeywords: [], 
                 QuickSuggestion: "Apply hash tables to solve a variety of problems while continuously refining your grasp of data structures.",
                 audioSrc: "AudioRecordings/Data_Structures_Audio.mp3",
+                Transcript: [
+                    {   
+                        Speaker: "Interviewer",
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                    },
+                    {
+                        Speaker: "User",
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                    },
+                ]
             },
             {
                 Skill: "Coding", 
@@ -63,6 +93,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 negativeSuggestionKeywords: [], 
                 QuickSuggestion: "We are impressed with your coding skills and urge you to continue doing what you do.",
                 audioSrc: "AudioRecordings/Coding_Audio.mp3",
+                Transcript: [
+                    {   
+                        Speaker: "Interviewer",
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                    },
+                    {
+                        Speaker: "User",
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                    },
+                ]
             },
             {
                 Skill: "Complexity Analysis", 
@@ -74,6 +114,16 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 negativeSuggestionKeywords: ['unsure', 'providing', 'vague', 'incorrect', 'estimates', 'struggled', 'to', 'give', 'precise', 'big', 'oh', 'notation', 'lacked', 'systematic' , 'approach'], 
                 QuickSuggestion: "Revisit space-time complexity basics, analyze algorithm efficiency, study common complexity classes.",
                 audioSrc: "AudioRecordings/Complexity_Analysis_Audio.mp3",
+                Transcript: [
+                    {   
+                        Speaker: "Interviewer",
+                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use"
+                    },
+                    {
+                        Speaker: "User",
+                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table."
+                    },
+                ]
             },
             {
                 Skill: "Communication", 
