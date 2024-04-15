@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface AudioTranscriptProps {
     text: string;
@@ -11,6 +11,8 @@ const AudioTranscript: React.FC<AudioTranscriptProps> = ({ text, speed }) => {
     const [displayText, setDisplayText] = useState<string>('');
     const [currentIndex, setCurrentIndex] = useState<number>(0);
 
+    const transcriptRef = useRef<HTMLSpanElement>(null);
+
     useEffect(() => {
 
         const typingInterval = setInterval(() => {
@@ -21,6 +23,10 @@ const AudioTranscript: React.FC<AudioTranscriptProps> = ({ text, speed }) => {
             }
             else {
                 clearInterval(typingInterval);
+
+                if (transcriptRef.current) {
+                    transcriptRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
             }
 
         }, speed);
@@ -29,7 +35,7 @@ const AudioTranscript: React.FC<AudioTranscriptProps> = ({ text, speed }) => {
     }, [text, speed, currentIndex]);
 
     return (
-        <span className="text-muted-foreground self-start">
+        <span ref={transcriptRef} tabIndex={-1} className="text-muted-foreground self-start">
             {displayText}
         </span>
     );
