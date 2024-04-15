@@ -41,6 +41,7 @@ import { Progress } from "@/components/ui/progress";
 
 export default function Home() {
 
+    const [selectedTab, setSelectedTab] = useState<string>("Tab1");
     const percentile_options: ChartOptions<'bar'>  = {
         responsive: true,
         plugins: {
@@ -140,6 +141,7 @@ export default function Home() {
     const [audioDuration, setAudioDuration] = useState<number>(0);
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+    const [isAudioLoading, setIsAudioLoading] = useState<boolean>(false);
 
     useEffect(() => {
 
@@ -248,6 +250,9 @@ export default function Home() {
 
     const handleAudioDrawer = async(_audioTitle: string, _audioDate: string, _audioTranscript: any[]) => {
 
+        setIsDrawerOpen(!isDrawerOpen);
+        setIsAudioLoading(true);
+
         //Set all audio metadata whoch will be used in the audio drawer
         setAudioTitle(_audioTitle);
         setAudioDate(_audioDate);
@@ -268,8 +273,7 @@ export default function Home() {
             const audioUrl = URL.createObjectURL(audio);
             setAudioSrc(audioUrl);
         }
-        
-        setIsDrawerOpen(!isDrawerOpen);
+        setIsAudioLoading(false);
     };
 
     const handleDrawerClose = () => {
@@ -278,8 +282,8 @@ export default function Home() {
         setAudioDate("");
         setAudioTranscript([]);
         setAudioCurrentTime(0);
-
         setIsAudioPlaying(false);
+
         setIsDrawerOpen(false);
     };
 
@@ -313,6 +317,11 @@ export default function Home() {
             }
         }
     }
+
+    const switchToAISuggestsTab = () => {
+        handleDrawerClose();
+        setSelectedTab("Tab3");
+    }
     
     return (
 
@@ -323,7 +332,7 @@ export default function Home() {
 
                     <div className="row z-10 max-w-5xl w-full items-center justify-between text-sm lg:flex">
                         
-                        <Tabs defaultValue="Tab1">
+                        <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value)}>
                                 
                             {/* Define the 4 tabs for the review dashboard */}
                             <TabsList className="w-full justify-start">
@@ -650,214 +659,222 @@ export default function Home() {
                                             </button>
                                         </div>
 
-                                        { audioTitle && audioDate ?
-                                            (
-                                                <div className="grid grid-cols-6 mt-1">
-                                                    
-                                                    <div className="col-span-1"></div>
+                                        { 
+                                            ! isAudioLoading ? (
+                                                audioTitle && audioDate ?
+                                                    (
+                                                        <div className="grid grid-cols-6 mt-1">
+                                                            
+                                                            <div className="col-span-1"></div>
 
-                                                    <div className="col-span-4">
+                                                            <div className="col-span-4">
 
-                                                        {/* Audio Drawer Header */}
-                                                        <div className="grid grid-cols-12 items-center">
-                                                        
-                                                            {  isAudioReady && audioSrc ? ( !isAudioPlaying ? 
-                                                                    (
-                                                                        <span
-                                                                            className="flex rounded-full bg-slate-600 hover:bg-black h-12 w-12 items-center justify-center border-4 border-muted cursor-pointer"
-                                                                            onClick={() => audioRef.current?.play()}
-                                                                        >
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-play-fill text-light" viewBox="0 0 16 16">
-                                                                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                                                                            </svg>
-                                                                        </span>
-                                                                    ) : 
-                                                                    (
-                                                                        <span 
-                                                                            className="flex rounded-full cursor-pointer bg-slate-600 hover:bg-black h-12 w-12 items-center justify-center border-4 border-muted"
-                                                                            onClick={() => audioRef.current?.pause()}
-                                                                        >
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-pause-fill text-light" viewBox="0 0 16 16">
-                                                                                <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
-                                                                            </svg>
-                                                                        </span>
+                                                                {/* Audio Drawer Header */}
+                                                                <div className="grid grid-cols-12 items-center">
+                                                                
+                                                                    {  isAudioReady && audioSrc ? ( !isAudioPlaying ? 
+                                                                            (
+                                                                                <span
+                                                                                    className="flex rounded-full bg-slate-600 hover:bg-black h-12 w-12 items-center justify-center border-4 border-muted cursor-pointer"
+                                                                                    onClick={() => audioRef.current?.play()}
+                                                                                >
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-play-fill text-light" viewBox="0 0 16 16">
+                                                                                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                                                                                    </svg>
+                                                                                </span>
+                                                                            ) : 
+                                                                            (
+                                                                                <span 
+                                                                                    className="flex rounded-full cursor-pointer bg-slate-600 hover:bg-black h-12 w-12 items-center justify-center border-4 border-muted"
+                                                                                    onClick={() => audioRef.current?.pause()}
+                                                                                >
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-pause-fill text-light" viewBox="0 0 16 16">
+                                                                                        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                                                                                    </svg>
+                                                                                </span>
+                                                                            )
+                                                                        ): null
+                                                                    }
+
+                                                                    {/* Title and Date of the audio Segment */}
+                                                                    <div className="col-span-10">
+                                                                        <DrawerTitle>{audioTitle}</DrawerTitle>
+                                                                        <DrawerDescription className="mt-1">{audioDate}</DrawerDescription>
+                                                                    </div>
+
+                                                                    <div className="col-span-1" onClick={switchToAISuggestsTab}>
+                                                                        View AI Suggestion
+                                                                    </div>
+
+                                                                </div>
+
+                                                                {/* Audio Progress Bar */}
+                                                                { isAudioReady && audioDuration !== 0 && (
+                                                                    <div className="row">
+                                                                        <Progress 
+                                                                            value={(audioCurrentTime / audioDuration) * 100}
+                                                                            max={100}
+                                                                            className="mt-2 w-full bg-slate-200 p-0"
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                                
+                                                                {/* Audio Drawer audio tag */}
+                                                                {audioSrc ? (
+                                                                        <div className="row text-center mt-2">
+                                                                            <audio 
+                                                                                controls
+                                                                                ref={audioRef} 
+                                                                                src={audioSrc} 
+                                                                                preload="metadata"
+                                                                                onTimeUpdate={handleAudioProgress}
+                                                                                onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
+                                                                                onCanPlay={(e) => setIsAudioReady(true)}
+                                                                                onPlaying={() => setIsAudioPlaying(true)}
+                                                                                onPause={() => setIsAudioPlaying(false)}
+                                                                                hidden
+                                                                            >
+                                                                            </audio>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="text-center">
+                                                                            <p className="text-lg font-semibold text-muted-foreground">
+                                                                                No audio available
+                                                                            </p>
+                                                                        </div>
                                                                     )
-                                                                ): null
-                                                            }
+                                                                }
+                                                                
+                                                                {/* Audio Drawer Transcript */}
+                                                                {
+                                                                    audioTranscript.length > 0 ? (
+                                                                        <div className="row mt-3 pb-5">
+                                                                            <p className="text-lg font-bold">Transcript</p>
+                                                                        
+                                                                            <div className="transcript-section min-h-64 max-h-64 overflow-auto">
+                                                                                
+                                                                                {audioTranscript.map((transcript, index) => {
+                                                                                    return (
+                                                                                        <p key={index} className="mt-4">
+                                                                                            {transcript.Speaker == "Interviewer" ? (
+                                                                                                    
+                                                                                                    <span 
+                                                                                                        className="flex cursor-pointer text-muted-foreground hover:underline hover:text-black"    
+                                                                                                        onClick={() => handleSpeakerClick(transcript.StartTime)}
+                                                                                                    >
+                                                                                                        <svg 
+                                                                                                            xmlns="http://www.w3.org/2000/svg" 
+                                                                                                            width="24" 
+                                                                                                            height="24" 
+                                                                                                            viewBox="0 0 16 16"
+                                                                                                            fill={getColorByTime(transcript.Speaker, transcript.StartTime)} 
+                                                                                                            className="bi bi-robot"
+                                                                                                        >
+                                                                                                            {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
+                                                                                                                <animate
+                                                                                                                    attributeName="fill"
+                                                                                                                    values={`${getColorByTime(transcript.Speaker, transcript.StartTime)};transparent;${getColorByTime(transcript.Speaker, transcript.StartTime)}`}
+                                                                                                                    dur="1s"
+                                                                                                                    repeatCount="indefinite"
+                                                                                                                />
+                                                                                                            )}
+                                                                                                            <path d="M6 12.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5M3 8.062C3 6.76 4.235 5.765 5.53 5.886a26.6 26.6 0 0 0 4.94 0C11.765 5.765 13 6.76 13 8.062v1.157a.93.93 0 0 1-.765.935c-.845.147-2.34.346-4.235.346s-3.39-.2-4.235-.346A.93.93 0 0 1 3 9.219zm4.542-.827a.25.25 0 0 0-.217.068l-.92.9a25 25 0 0 1-1.871-.183.25.25 0 0 0-.068.495c.55.076 1.232.149 2.02.193a.25.25 0 0 0 .189-.071l.754-.736.847 1.71a.25.25 0 0 0 .404.062l.932-.97a25 25 0 0 0 1.922-.188.25.25 0 0 0-.068-.495c-.538.074-1.207.145-1.98.189a.25.25 0 0 0-.166.076l-.754.785-.842-1.7a.25.25 0 0 0-.182-.135"/>
+                                                                                                            <path d="M8.5 1.866a1 1 0 1 0-1 0V3h-2A4.5 4.5 0 0 0 1 7.5V8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1v-.5A4.5 4.5 0 0 0 10.5 3h-2zM14 7.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5A3.5 3.5 0 0 1 5.5 4h5A3.5 3.5 0 0 1 14 7.5"/>
+                                                                                                        </svg>
 
-                                                            {/* Title and Date of the audio Segment */}
-                                                            <div className="col-span-10">
-                                                                <DrawerTitle>{audioTitle}</DrawerTitle>
-                                                                <DrawerDescription className="mt-1">{audioDate}</DrawerDescription>
-                                                            </div>
+                                                                                                        <span className="ms-2 font-semibold">
+                                                                                                            {transcript.Speaker}
+                                                                                                            {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
+                                                                                                                <span className="animate-pulse"> (Speaking) </span>
+                                                                                                            )}
+                                                                                                        </span>
+                                                                                                        
+                                                                                                    </span>
 
-                                                            <div className="col-span-1">
-                                                                View AI Suggestion
+                                                                                                ) : (
+
+                                                                                                    <span key={index} 
+                                                                                                        className="flex cursor-pointer text-muted-foreground  hover:underline hover:text-black"    
+                                                                                                        onClick={() => handleSpeakerClick(transcript.StartTime)}
+                                                                                                    >
+                                                                                                        <svg 
+                                                                                                            xmlns="http://www.w3.org/2000/svg" 
+                                                                                                            width="24" 
+                                                                                                            height="24"
+                                                                                                            viewBox="0 0 16 16"
+                                                                                                            fill={getColorByTime(transcript.Speaker, transcript.StartTime)} 
+                                                                                                            className="bi bi-person-circle"
+                                                                                                        >
+                                                                                                            {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
+                                                                                                                <animate
+                                                                                                                    attributeName="fill"
+                                                                                                                    values={`${getColorByTime(transcript.Speaker, transcript.StartTime)};transparent;${getColorByTime(transcript.Speaker, transcript.StartTime)}`}
+                                                                                                                    dur="1s"
+                                                                                                                    repeatCount="indefinite"
+                                                                                                                />
+                                                                                                            )}
+                                                                                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                                                                                            <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                                                                                        </svg>
+                                                                                                    
+                                                                                                        <span className="ms-2 font-semibold">
+                                                                                                            {interviewData.User}
+                                                                                                            {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
+                                                                                                                <span className="animate-pulse"> (Speaking)</span>
+                                                                                                            )}
+                                                                                                        </span>
+                                                                                                        
+                                                                                                    </span>
+                                                                                                )
+                                                                                            }
+                                                                                            {
+                                                                                                audioCurrentTime < transcript.StartTime ? (
+                                                                                                    <span className="text-muted-foreground">
+                                                                                                        
+                                                                                                    </span>
+                                                                                                ) : (
+                                                                                                    audioCurrentTime > transcript.EndTime ? (
+                                                                                                        <span className="text-muted-foreground">
+                                                                                                            {transcript.Text}
+                                                                                                        </span>
+                                                                                                    ) : (
+                                                                                                        <span className="text-muted-foreground">
+                                                                                                            <AudioTranscript text={transcript.Text} speed={transcript.Text.length/(transcript.EndTime - transcript.StartTime)} />
+                                                                                                        </span>
+                                                                                                    )
+                                                                                                )
+                                                                                            }
+                                                                                        </p>
+                                                                                    )})
+                                                                                }
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="text-center">
+                                                                            <p className="text-lg font-semibold text-muted-foreground">
+                                                                                No transcript available
+                                                                            </p>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                                
                                                             </div>
+                                                        
+                                                            <div className="col-span-1"></div>
 
                                                         </div>
-
-                                                        {/* Audio Progress Bar */}
-                                                        { isAudioReady && audioDuration !== 0 && (
-                                                            <div className="row">
-                                                                <Progress 
-                                                                    value={(audioCurrentTime / audioDuration) * 100}
-                                                                    max={100}
-                                                                    className="mt-2 w-full bg-slate-200 p-0"
-                                                                />
-                                                            </div>
-                                                        )}
-                                                        
-                                                        {/* Audio Drawer audio tag */}
-                                                        {audioSrc ? (
-                                                                <div className="row text-center mt-2">
-                                                                    <audio 
-                                                                        controls
-                                                                        ref={audioRef} 
-                                                                        src={audioSrc} 
-                                                                        preload="metadata"
-                                                                        onTimeUpdate={handleAudioProgress}
-                                                                        onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
-                                                                        onCanPlay={(e) => setIsAudioReady(true)}
-                                                                        onPlaying={() => setIsAudioPlaying(true)}
-                                                                        onPause={() => setIsAudioPlaying(false)}
-                                                                        hidden
-                                                                    >
-                                                                    </audio>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="text-center">
-                                                                    <p className="text-lg font-semibold text-muted-foreground">
-                                                                        No audio available
-                                                                    </p>
-                                                                </div>
-                                                            )
-                                                        }
-                                                        
-                                                        {/* Audio Drawer Transcript */}
-                                                        {
-                                                            audioTranscript.length > 0 ? (
-                                                                <div className="row mt-3 pb-5">
-                                                                    <p className="text-lg font-bold">Transcript</p>
-                                                                
-                                                                    <div className="transcript-section min-h-64 max-h-64 overflow-auto">
-                                                                        
-                                                                        {audioTranscript.map((transcript, index) => {
-                                                                            return (
-                                                                                <p key={index} className="mt-4">
-                                                                                    {transcript.Speaker == "Interviewer" ? (
-                                                                                            
-                                                                                            <span 
-                                                                                                className="flex cursor-pointer text-muted-foreground hover:underline hover:text-black"    
-                                                                                                onClick={() => handleSpeakerClick(transcript.StartTime)}
-                                                                                            >
-                                                                                                <svg 
-                                                                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                                                                    width="24" 
-                                                                                                    height="24" 
-                                                                                                    viewBox="0 0 16 16"
-                                                                                                    fill={getColorByTime(transcript.Speaker, transcript.StartTime)} 
-                                                                                                    className="bi bi-robot"
-                                                                                                >
-                                                                                                    {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
-                                                                                                        <animate
-                                                                                                            attributeName="fill"
-                                                                                                            values={`${getColorByTime(transcript.Speaker, transcript.StartTime)};transparent;${getColorByTime(transcript.Speaker, transcript.StartTime)}`}
-                                                                                                            dur="1s"
-                                                                                                            repeatCount="indefinite"
-                                                                                                        />
-                                                                                                    )}
-                                                                                                    <path d="M6 12.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5M3 8.062C3 6.76 4.235 5.765 5.53 5.886a26.6 26.6 0 0 0 4.94 0C11.765 5.765 13 6.76 13 8.062v1.157a.93.93 0 0 1-.765.935c-.845.147-2.34.346-4.235.346s-3.39-.2-4.235-.346A.93.93 0 0 1 3 9.219zm4.542-.827a.25.25 0 0 0-.217.068l-.92.9a25 25 0 0 1-1.871-.183.25.25 0 0 0-.068.495c.55.076 1.232.149 2.02.193a.25.25 0 0 0 .189-.071l.754-.736.847 1.71a.25.25 0 0 0 .404.062l.932-.97a25 25 0 0 0 1.922-.188.25.25 0 0 0-.068-.495c-.538.074-1.207.145-1.98.189a.25.25 0 0 0-.166.076l-.754.785-.842-1.7a.25.25 0 0 0-.182-.135"/>
-                                                                                                    <path d="M8.5 1.866a1 1 0 1 0-1 0V3h-2A4.5 4.5 0 0 0 1 7.5V8a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v1a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1v-.5A4.5 4.5 0 0 0 10.5 3h-2zM14 7.5V13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5A3.5 3.5 0 0 1 5.5 4h5A3.5 3.5 0 0 1 14 7.5"/>
-                                                                                                </svg>
-
-                                                                                                <span className="ms-2 font-semibold">
-                                                                                                    {transcript.Speaker}
-                                                                                                    {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
-                                                                                                        <span className="animate-pulse"> (Speaking) </span>
-                                                                                                    )}
-                                                                                                </span>
-                                                                                                
-                                                                                            </span>
-
-                                                                                        ) : (
-
-                                                                                            <span key={index} 
-                                                                                                className="flex cursor-pointer text-muted-foreground  hover:underline hover:text-black"    
-                                                                                                onClick={() => handleSpeakerClick(transcript.StartTime)}
-                                                                                            >
-                                                                                                <svg 
-                                                                                                    xmlns="http://www.w3.org/2000/svg" 
-                                                                                                    width="24" 
-                                                                                                    height="24"
-                                                                                                    viewBox="0 0 16 16"
-                                                                                                    fill={getColorByTime(transcript.Speaker, transcript.StartTime)} 
-                                                                                                    className="bi bi-person-circle"
-                                                                                                >
-                                                                                                    {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
-                                                                                                        <animate
-                                                                                                            attributeName="fill"
-                                                                                                            values={`${getColorByTime(transcript.Speaker, transcript.StartTime)};transparent;${getColorByTime(transcript.Speaker, transcript.StartTime)}`}
-                                                                                                            dur="1s"
-                                                                                                            repeatCount="indefinite"
-                                                                                                        />
-                                                                                                    )}
-                                                                                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                                                                                    <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                                                                                                </svg>
-                                                                                            
-                                                                                                <span className="ms-2 font-semibold">
-                                                                                                    {interviewData.User}
-                                                                                                    {transcript.StartTime <= audioCurrentTime && transcript.EndTime >= audioCurrentTime && (
-                                                                                                        <span className="animate-pulse"> (Speaking)</span>
-                                                                                                    )}
-                                                                                                </span>
-                                                                                                
-                                                                                            </span>
-                                                                                        )
-                                                                                    }
-                                                                                    {
-                                                                                        audioCurrentTime < transcript.StartTime ? (
-                                                                                            <span className="text-muted-foreground">
-                                                                                                
-                                                                                            </span>
-                                                                                        ) : (
-                                                                                            audioCurrentTime > transcript.EndTime ? (
-                                                                                                <span className="text-muted-foreground">
-                                                                                                    {transcript.Text}
-                                                                                                </span>
-                                                                                            ) : (
-                                                                                                <span className="text-muted-foreground">
-                                                                                                    <AudioTranscript text={transcript.Text} speed={transcript.Text.length/(transcript.EndTime - transcript.StartTime)} />
-                                                                                                </span>
-                                                                                            )
-                                                                                        )
-                                                                                    }
-                                                                                </p>
-                                                                            )})
-                                                                        }
-                                                                        
-                                                                    </div>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="text-center">
-                                                                    <p className="text-lg font-semibold text-muted-foreground">
-                                                                        No transcript available
-                                                                    </p>
-                                                                </div>
-                                                            )
-                                                        }
-                                                        
-
-                                                    </div>
-                                                
-                                                    <div className="col-span-1"></div>
-
-                                                </div>
-                                            ) : (
+                                                    ) : (
+                                                        <div className="text-center">
+                                                            <p className="text-lg font-semibold text-muted-foreground">
+                                                                No audio available
+                                                            </p>
+                                                        </div>
+                                                    )
+                                            ):(
                                                 <div className="text-center">
-                                                    <p className="text-lg font-semibold text-muted-foreground">
-                                                        No audio available
+                                                    <p className="text-lg font-semibold text-muted-foreground animate-pulse">
+                                                        Loading Audio...
                                                     </p>
                                                 </div>
                                             )
