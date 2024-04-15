@@ -36,8 +36,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                     {
                         Speaker: "Interviewer", 
                         Text: "Let's discuss how you would approach solving the Two-Sum problem using a hash table before we move on to coding. How would you start?",
-                        StartTime: 1,
-                        EndTime: 6
+                        StartTime: 0.1,
+                        EndTime: 6.5
                     },
                     {
                         Speaker: "User",

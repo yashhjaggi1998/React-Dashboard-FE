@@ -35,6 +35,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { SkillRatingCard } from "@/components/ui/SkillRatingCard";
 import { UserMetaData } from "@/components/ui/UserMetaData";
+import { Progress } from "@/components/ui/progress";
 
 
 
@@ -135,9 +136,7 @@ export default function Home() {
     const [audioTitle, setAudioTitle] = useState<string>("");
     const [audioDate, setAudioDate] = useState<string>("");
     const [audioTranscript, setAudioTranscript] = useState<any[]>([]);
-
     const [audioCurrentTime, setAudioCurrentTime] = useState<number>(0);
-
     const [audioDuration, setAudioDuration] = useState<number>(0);
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -696,6 +695,17 @@ export default function Home() {
                                                             </div>
 
                                                         </div>
+
+                                                        {/* Audio Progress Bar */}
+                                                        { isAudioReady && audioDuration !== 0 && (
+                                                            <div className="row">
+                                                                <Progress 
+                                                                    value={(audioCurrentTime / audioDuration) * 100}
+                                                                    max={100}
+                                                                    className="mt-2 w-full bg-slate-200 p-0"
+                                                                />
+                                                            </div>
+                                                        )}
                                                         
                                                         {/* Audio Drawer audio tag */}
                                                         {audioSrc ? (
@@ -705,11 +715,12 @@ export default function Home() {
                                                                         ref={audioRef} 
                                                                         src={audioSrc} 
                                                                         preload="metadata"
+                                                                        onTimeUpdate={handleAudioProgress}
                                                                         onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
                                                                         onCanPlay={(e) => setIsAudioReady(true)}
                                                                         onPlaying={() => setIsAudioPlaying(true)}
                                                                         onPause={() => setIsAudioPlaying(false)}
-                                                                        onTimeUpdate={handleAudioProgress}
+                                                                        hidden
                                                                     >
                                                                     </audio>
                                                                 </div>
