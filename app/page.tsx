@@ -401,8 +401,8 @@ export default function Home() {
                                 <div className="grid grid-cols-3 gap-3 mt-4">
                                     {interviewData.Segments.map((segment, index) => {
                                         return (
-                                            <Card className="border rounded-xl px-1 py-2" key={index}>
-                                                <CardHeader className="px-4 py-2">
+                                            <Card className="border rounded-xl p-2" key={index}>
+                                                <CardHeader className="px-3 py-2">
                                                     <CardTitle>
                                                         <p className="text-lg">
                                                             {segment.Skill}
