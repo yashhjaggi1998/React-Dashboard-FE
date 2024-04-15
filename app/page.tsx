@@ -685,9 +685,10 @@ export default function Home() {
                                                                 ): null
                                                             }
 
-                                                            <div className="col-span-10 gap-2">
+                                                            {/* Title and Date of the audio Segment */}
+                                                            <div className="col-span-10">
                                                                 <DrawerTitle>{audioTitle}</DrawerTitle>
-                                                                <DrawerDescription>{audioDate}</DrawerDescription>
+                                                                <DrawerDescription className="mt-1">{audioDate}</DrawerDescription>
                                                             </div>
 
                                                             <div className="col-span-1">
