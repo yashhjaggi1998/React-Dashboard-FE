@@ -26,7 +26,7 @@ import { useEffect, useState, useRef, FC } from "react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from "@/components/ui/drawer";
 import AudioTranscript from "@/components/ui/AudioTranscript";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Chart, ChartData, ChartOptions} from 'chart.js/auto';
+import { ChartOptions} from 'chart.js/auto';
 import "chart.js/auto";
 import { Bar } from 'react-chartjs-2';
 import 'react-circular-progressbar/dist/styles.css';
@@ -34,7 +34,6 @@ import { Rating } from "react-simple-star-rating";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { SkillRatingCard } from "@/components/ui/SkillRatingCard";
-import { User } from "lucide-react";
 import { UserMetaData } from "@/components/ui/UserMetaData";
 
 
@@ -706,7 +705,7 @@ export default function Home() {
                                                                         
                                                                         {audioTranscript.map((transcript, index) => {
                                                                             return (
-                                                                                <p key={index}>
+                                                                                <p key={index} className="mt-4">
                                                                                     {transcript.Speaker == "Interviewer" ? (
                                                                                             
                                                                                             <span 
