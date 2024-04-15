@@ -616,11 +616,33 @@ export default function Home() {
                                     We have broken the interview into 6 segments. This will help you dive into the specifics much faster. 
                                 </p>
 
+                                <div className="grid grid-cols-3 gap-4 mt-3">
+
+                                    {
+                                        interviewData.Segments.map((segment, index) => {
+                                            return (
+                                                <div
+                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.Transcript)}
+                                                    className="col-span-1 card-container cursor-pointer" 
+                                                    key={index}
+                                                >
+                                                    <AudioCard 
+                                                        title={segment.Skill} 
+                                                        date={interviewData.Date}
+                                                    />
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    
+                                </div>
+
                                 <Drawer open={isDrawerOpen} onClose={handleDrawerClose}>
 
                                     <DrawerContent>
                                         
-                                        <div className="mt-2 pe-5 text-end">
+                                        {/* Drawer Close Button */}
+                                        <div className="pe-6 text-end">
                                             <button className="btn btn-light text-xl" onClick={handleDrawerClose}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16">
                                                     <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -630,7 +652,7 @@ export default function Home() {
 
                                         { audioTitle && audioDate ?
                                             (
-                                                <div className="grid grid-cols-6 mt-2">
+                                                <div className="grid grid-cols-6 mt-1">
                                                     
                                                     <div className="col-span-1"></div>
 
@@ -663,9 +685,13 @@ export default function Home() {
                                                                 ): null
                                                             }
 
-                                                            <div className="col-span-11">
+                                                            <div className="col-span-10 gap-2">
                                                                 <DrawerTitle>{audioTitle}</DrawerTitle>
                                                                 <DrawerDescription>{audioDate}</DrawerDescription>
+                                                            </div>
+
+                                                            <div className="col-span-1">
+                                                                View AI Suggestion
                                                             </div>
 
                                                         </div>
@@ -674,7 +700,7 @@ export default function Home() {
                                                         {audioSrc ? (
                                                                 <div className="row text-center mt-2">
                                                                     <audio 
-                                                                        controls 
+                                                                        controls
                                                                         ref={audioRef} 
                                                                         src={audioSrc} 
                                                                         preload="metadata"
@@ -827,27 +853,6 @@ export default function Home() {
                                     </DrawerContent>
 
                                 </Drawer>
-                                    
-                                <div className="grid grid-cols-3 gap-4 mt-3">
-
-                                    {
-                                        interviewData.Segments.map((segment, index) => {
-                                            return (
-                                                <div
-                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.Transcript)}
-                                                    className="col-span-1 card-container cursor-pointer" 
-                                                    key={index}
-                                                >
-                                                    <AudioCard 
-                                                        title={segment.Skill} 
-                                                        date={interviewData.Date}
-                                                    />
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                    
-                                </div>
                 
                             </TabsContent>
                         </Tabs>
