@@ -101,6 +101,7 @@ export default function Home() {
             positiveSuggestionKeywords: string[];
             negativeSuggestionKeywords: string[];
             QuickSuggestion: string;
+            Transcript: any[];
         }[];
     }>(undefined);
     
@@ -128,9 +129,10 @@ export default function Home() {
      //Audo Tab State Variables
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);    
-    const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
+    const [audioSrc, setAudioSrc] = useState<string>("");
     const [audioTitle, setAudioTitle] = useState<string>("");
     const [audioDate, setAudioDate] = useState<string>("");
+    const [audioTranscript, setAudioTranscript] = useState<any[]>([]);
 
     const [audioDuration, setAudioDuration] = useState<number>(0);
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
@@ -241,15 +243,37 @@ export default function Home() {
 
     }, []);
 
+    const handleAudioDrawer = async(_audioTitle: string, _audioDate: string, _audioTranscript: any[]) => {
 
-    const handleAudioDrawer = async(_audioTitle: string, _audioDate: string, _audioSrc: string) => {
-        setAudioSrc(_audioSrc);
+        //Set all audio metadata whoch will be used in the audio drawer
         setAudioTitle(_audioTitle);
         setAudioDate(_audioDate);
+        if(_audioTranscript)
+            setAudioTranscript(_audioTranscript);
+
+        //Fetch audio file in wav fromat from the backend.
+        const url = `/api/fetch_audio_file?segmentName=${_audioTitle}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            console.error("Network response was not ok");
+            setAudioSrc("");
+        }
+        else {
+            const audio = await response.blob();
+            const audioUrl = URL.createObjectURL(audio);
+            setAudioSrc(audioUrl);
+        }
+        
+
         setIsDrawerOpen(!isDrawerOpen);
     };
 
     const handleDrawerClose = () => {
+        setAudioSrc("");
+        setAudioTitle("");
+        setAudioDate("");
+        setAudioTranscript([]);
+
         setIsAudioPlaying(false);
         setIsDrawerOpen(false);
     };
@@ -666,7 +690,7 @@ export default function Home() {
                                             </button>
                                         </div>
 
-                                        { audioSrc ?
+                                        { audioTitle && audioDate ?
                                             (
                                                 <div className="grid grid-cols-4 mt-2">
                                                     
@@ -709,30 +733,62 @@ export default function Home() {
                                                         </div>
                                                         
                                                         {/* Audio Drawer audio tag */}
-                                                        <div className="row text-center mt-2">
-                                                            <audio 
-                                                                controls 
-                                                                ref={audioRef} 
-                                                                src={audioSrc} 
-                                                                preload="metadata"
-                                                                onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
-                                                                onCanPlay={(e) => setIsAudioReady(true)}
-                                                                onPlaying={() => setIsAudioPlaying(true)}
-                                                                onPause={() => setIsAudioPlaying(false)}
-                                                            >
-                                                            </audio>
-                                                        </div>
-
-                                                        <div className="row mt-3 pb-5">
-                                                            <p className="text-muted-foreground font-semibold h-fit">Transcript</p>
+                                                        {audioSrc ? (
+                                                                <div className="row text-center mt-2">
+                                                                    <audio 
+                                                                        controls 
+                                                                        ref={audioRef} 
+                                                                        src={audioSrc} 
+                                                                        preload="metadata"
+                                                                        onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
+                                                                        onCanPlay={(e) => setIsAudioReady(true)}
+                                                                        onPlaying={() => setIsAudioPlaying(true)}
+                                                                        onPause={() => setIsAudioPlaying(false)}
+                                                                    >
+                                                                    </audio>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-center">
+                                                                    <p className="text-lg font-semibold text-muted-foreground">
+                                                                        No audio available
+                                                                    </p>
+                                                                </div>
+                                                            )
+                                                        }
                                                         
-                                                            <div className="row transcript-section min-h-64 max-h-64 overflow-auto">
-                                                                <AudioTranscript
-                                                                    text="Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools." 
-                                                                    speed={50} 
-                                                                />
-                                                            </div>
-                                                        </div>
+                                                        {/* Audio Drawer Transcript */}
+                                                        {
+                                                            audioTranscript.length > 0 ? (
+                                                                <div className="row mt-3 pb-5">
+                                                                    <p className="text-muted-foreground font-semibold h-fit">Transcript</p>
+                                                                
+                                                                    <div className="row transcript-section min-h-64 max-h-64 overflow-auto">
+                                                                        
+                                                                        {audioTranscript.map((transcript, index) => {
+                                                                            return (
+                                                                                <p key={index}>
+                                                                                    <span key={index} className="text-muted-foreground">
+                                                                                        {transcript.Speaker}:{" "}
+                                                                                    </span>
+                                                                                    <AudioTranscript
+                                                                                        text = {transcript.Text}
+                                                                                        speed={50} 
+                                                                                    />
+                                                                                </p>
+                                                                            )})
+                                                                        }
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-center">
+                                                                    <p className="text-lg font-semibold text-muted-foreground">
+                                                                        No transcript available
+                                                                    </p>
+                                                                </div>
+                                                            )
+                                                        }
+                                                        
 
                                                     </div>
                                                 
@@ -758,7 +814,7 @@ export default function Home() {
                                         interviewData.Segments.map((segment, index) => {
                                             return (
                                                 <div
-                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.audioSrc)}
+                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.Transcript)}
                                                     className="col-span-1 card-container cursor-pointer" 
                                                     key={index}
                                                 >
