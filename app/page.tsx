@@ -659,7 +659,7 @@ export default function Home() {
                                                     <div className="col-span-4">
 
                                                         {/* Audio Drawer Header */}
-                                                        <div className="grid grid-cols-12">
+                                                        <div className="grid grid-cols-12 items-center">
                                                         
                                                             {  isAudioReady && audioSrc ? ( !isAudioPlaying ? 
                                                                     (
