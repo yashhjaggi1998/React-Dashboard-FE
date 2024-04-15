@@ -790,7 +790,7 @@ export default function Home() {
                     <a
                         href="https://yashhjaggi1998.github.io/portfolio_yashh"
                         target="_blank"
-                        className="text-decoration-none"
+                        className="text-decoration-none text-sky-500"
                     >
                         Yashh Jaggi
                     </a>
