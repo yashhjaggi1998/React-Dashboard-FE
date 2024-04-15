@@ -92,6 +92,7 @@ export default function Home() {
             }[];
         };
         Segments: {
+            audioSrc: string;
             Skill: string;
             Rating: number;
             AveragePastRating: number;
@@ -128,6 +129,9 @@ export default function Home() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);    
     const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
+    const [audioTitle, setAudioTitle] = useState<string>("");
+    const [audioDate, setAudioDate] = useState<string>("");
+    
     const [audioDuration, setAudioDuration] = useState<number>(0);
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -238,8 +242,10 @@ export default function Home() {
     }, []);
 
 
-    const handleAudioDrawer = async() => {
-        setAudioSrc("sample_audio2.mp3");
+    const handleAudioDrawer = async(_audioTitle: string, _audioDate: string, _audioSrc: string) => {
+        setAudioSrc(_audioSrc);
+        setAudioTitle(_audioTitle);
+        setAudioDate(_audioDate);
         setIsDrawerOpen(!isDrawerOpen);
     };
 
@@ -252,7 +258,6 @@ export default function Home() {
 
         <main className="flex min-h-screen flex-col items-center justify-between p-12">
             
-                
             {
                 interviewData ? (
 
@@ -260,14 +265,16 @@ export default function Home() {
                         
                         <Tabs defaultValue="Tab1">
                                 
-                                <TabsList className="w-full justify-start">
-                                    <TabsTrigger value="Tab1">Overview</TabsTrigger>
-                                    <TabsTrigger value="Tab2">Past Performance</TabsTrigger>
-                                    <TabsTrigger value="Tab3">AI Suggests</TabsTrigger>
-                                    <TabsTrigger value="Tab4">Audio & Transcript</TabsTrigger>
-                                </TabsList>
+                            {/* Define the 4 tabs for the review dashboard */}
+                            <TabsList className="w-full justify-start">
+                                <TabsTrigger value="Tab1">Overview</TabsTrigger>
+                                <TabsTrigger value="Tab2">Past Performance</TabsTrigger>
+                                <TabsTrigger value="Tab3">AI Suggests</TabsTrigger>
+                                <TabsTrigger value="Tab4">Audio & Transcript</TabsTrigger>
+                            </TabsList>
 
 
+                            {/* Overview Tabe */}
                             <TabsContent value="Tab1" className="text-start min-h-64 font-mono">
 
                                 <ResizablePanelGroup direction="horizontal" className="gap-2 mt-3 mb-2">
@@ -424,6 +431,7 @@ export default function Home() {
                             </TabsContent>
 
 
+                            {/* Past Performance Tab */}
                             <TabsContent value="Tab2">
 
                                 <ResizablePanelGroup direction="horizontal" className="mb-2">
@@ -498,6 +506,7 @@ export default function Home() {
                             </TabsContent>
 
 
+                            {/* AI Suggests Tab */}
                             <TabsContent value="Tab3" className="text-start mt-3 px-3">
                                 
                                 <p className="text-2xl font-semibold mt-2">Quick Suggestions</p>
@@ -636,6 +645,7 @@ export default function Home() {
                             </TabsContent>
                 
 
+                            {/* Audio & Transcript Tab */}
                             <TabsContent value="Tab4"  className="text-start mt-3 px-3 pb-5">
                                 <h2 className="text-2xl font-semibold tracking-light">Listen Now</h2>
                                 <div className="border-bottom"></div>
@@ -658,15 +668,14 @@ export default function Home() {
 
                                         <div className="row mt-2">
                                             
-                                            <div className="col-3">
-                                            </div>
+                                            <div className="col-3"></div>
 
                                             <div className="col-6">
 
-                                                <div className="grid grid-cols-12 audio-controls">
+                                                {/* Audio Drawer Header */}
+                                                <div className="grid grid-cols-12">
                                                 
-                                                    {  isAudioReady && audioSrc ? 
-                                                        ( !isAudioPlaying ? 
+                                                    {  isAudioReady && audioSrc ? ( !isAudioPlaying ? 
                                                             (
                                                                 <span
                                                                     className="flex rounded-full bg-black h-10 w-10 items-center justify-center border-4 border-muted bg-success cursor-pointer"
@@ -687,33 +696,38 @@ export default function Home() {
                                                                     </svg>
                                                                 </span>
                                                             )
-                                                        ): 
-                                                        null
+                                                        ): null
                                                     }
 
                                                     <div className="col-span-11">
-                                                        <DrawerTitle>Problem Solving</DrawerTitle>
-                                                        <DrawerDescription>April 8, 2024</DrawerDescription>
+                                                        <DrawerTitle>{audioTitle}</DrawerTitle>
+                                                        <DrawerDescription>{audioDate}</DrawerDescription>
                                                     </div>
 
                                                 </div>
-
-                                                <div className="row audio-duration"></div>
                                                 
-                                                <div className="row text-center">
-                                                    
-                                                    <audio 
-                                                        controls 
-                                                        ref={audioRef} 
-                                                        src={audioSrc} 
-                                                        preload="metadata"
-                                                        onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
-                                                        onCanPlay={(e) => setIsAudioReady(true)}
-                                                        onPlaying={() => setIsAudioPlaying(true)}
-                                                        onPause={() => setIsAudioPlaying(false)}
-                                                    >
-                                                    </audio>
-                                                </div>
+                                                {/* Audio Drawer audio tag */}
+                                                {audioSrc ? 
+                                                    (
+                                                    <div className="row text-center">
+                                                        <audio 
+                                                            controls 
+                                                            ref={audioRef} 
+                                                            src={audioSrc} 
+                                                            preload="metadata"
+                                                            onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
+                                                            onCanPlay={(e) => setIsAudioReady(true)}
+                                                            onPlaying={() => setIsAudioPlaying(true)}
+                                                            onPause={() => setIsAudioPlaying(false)}
+                                                        >
+                                                        </audio>
+                                                    </div>
+                                                    ) : (
+                                                        <div className="row text-center">
+                                                            <p className="text-muted-foreground">No audio available</p>
+                                                        </div>
+                                                    )
+                                                }
 
                                                 <div className="row mt-3 pb-5">
                                                     <p className="text-muted-foreground font-semibold h-fit">Transcript</p>
@@ -738,51 +752,22 @@ export default function Home() {
                                     
                                 <div className="grid grid-cols-3 gap-4 mt-3">
 
-                                    <div 
-                                        className="col-span-1 card-container cursor-pointer" 
-                                        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-                                    >
-                                        <AudioCard title="Problem Solving" date="April 8, 2024" />
-                                    </div>
-                                    
-                                    <div 
-                                        className="col-span-1 card-container cursor-pointer" 
-                                        onClick={handleAudioDrawer}
-                                    >
-                                        <AudioCard title="Algorithms" date="April 8, 2024"/>
-                                    </div>
-
-                                    <div 
-                                        className="col-span-1 card-container cursor-pointer" 
-                                        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-                                    >
-                                        <AudioCard title="Data Structures" date="April 8, 2024"/>
-                                    </div>
-
-                                </div>
-                                    
-                                <div className="grid grid-cols-3 gap-4 mt-3">
-                                    
-                                    <div 
-                                        className="col-span-1 card-container cursor-pointer" 
-                                        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-                                    >
-                                        <AudioCard title="Coding Skills" date="April 8, 2024"/>
-                                    </div>
-
-                                    <div 
-                                        className="col-span-1 card-container cursor-pointer" 
-                                        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-                                    >
-                                        <AudioCard title="Complexity Analysis" date="April 8, 2024"/>
-                                    </div>
-
-                                    <div 
-                                        className="col-span-1 card-container cursor-pointer" 
-                                        onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-                                    >
-                                        <AudioCard title="Communication Skills" date="April 8, 2024"/>
-                                    </div>
+                                    {
+                                        interviewData.Segments.map((segment, index) => {
+                                            return (
+                                                <div
+                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.audioSrc)}
+                                                    className="col-span-1 card-container cursor-pointer" 
+                                                    key={index}
+                                                >
+                                                    <AudioCard 
+                                                        title={segment.Skill} 
+                                                        date={interviewData.Date}
+                                                    />
+                                                </div>
+                                            )
+                                        })
+                                    }
                                     
                                 </div>
                 
