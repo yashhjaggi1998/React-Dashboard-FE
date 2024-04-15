@@ -131,7 +131,7 @@ export default function Home() {
     const [audioSrc, setAudioSrc] = useState<string>("sample_audio.mp3");
     const [audioTitle, setAudioTitle] = useState<string>("");
     const [audioDate, setAudioDate] = useState<string>("");
-    
+
     const [audioDuration, setAudioDuration] = useState<number>(0);
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -666,85 +666,87 @@ export default function Home() {
                                             </button>
                                         </div>
 
-                                        <div className="row mt-2">
-                                            
-                                            <div className="col-3"></div>
+                                        { audioSrc ?
+                                            (
+                                                <div className="grid grid-cols-4 mt-2">
+                                                    
+                                                    <div className="col-span-1"></div>
 
-                                            <div className="col-6">
+                                                    <div className="col-span-2">
 
-                                                {/* Audio Drawer Header */}
-                                                <div className="grid grid-cols-12">
-                                                
-                                                    {  isAudioReady && audioSrc ? ( !isAudioPlaying ? 
-                                                            (
-                                                                <span
-                                                                    className="flex rounded-full bg-black h-10 w-10 items-center justify-center border-4 border-muted bg-success cursor-pointer"
-                                                                    onClick={() => audioRef.current?.play()}
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-play-fill text-light" viewBox="0 0 16 16">
-                                                                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                                                                    </svg>
-                                                                </span>
-                                                            ) : 
-                                                            (
-                                                                <span 
-                                                                    className="flex rounded-full bg-black h-10 w-10 items-center justify-center border-4 border-muted bg-success cursor-pointer"
-                                                                    onClick={() => audioRef.current?.pause()}
-                                                                >
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pause-fill text-light" viewBox="0 0 16 16">
-                                                                        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
-                                                                    </svg>
-                                                                </span>
-                                                            )
-                                                        ): null
-                                                    }
+                                                        {/* Audio Drawer Header */}
+                                                        <div className="grid grid-cols-12">
+                                                        
+                                                            {  isAudioReady && audioSrc ? ( !isAudioPlaying ? 
+                                                                    (
+                                                                        <span
+                                                                            className="flex rounded-full bg-slate-600 hover:bg-black h-10 w-10 items-center justify-center border-4 border-muted cursor-pointer"
+                                                                            onClick={() => audioRef.current?.play()}
+                                                                        >
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-play-fill text-light" viewBox="0 0 16 16">
+                                                                                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                                                                            </svg>
+                                                                        </span>
+                                                                    ) : 
+                                                                    (
+                                                                        <span 
+                                                                            className="flex rounded-full cursor-pointer bg-slate-600 hover:bg-black h-10 w-10 items-center justify-center border-4 border-muted"
+                                                                            onClick={() => audioRef.current?.pause()}
+                                                                        >
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pause-fill text-light" viewBox="0 0 16 16">
+                                                                                <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                                                                            </svg>
+                                                                        </span>
+                                                                    )
+                                                                ): null
+                                                            }
 
-                                                    <div className="col-span-11">
-                                                        <DrawerTitle>{audioTitle}</DrawerTitle>
-                                                        <DrawerDescription>{audioDate}</DrawerDescription>
-                                                    </div>
+                                                            <div className="col-span-11">
+                                                                <DrawerTitle>{audioTitle}</DrawerTitle>
+                                                                <DrawerDescription>{audioDate}</DrawerDescription>
+                                                            </div>
 
-                                                </div>
-                                                
-                                                {/* Audio Drawer audio tag */}
-                                                {audioSrc ? 
-                                                    (
-                                                    <div className="row text-center">
-                                                        <audio 
-                                                            controls 
-                                                            ref={audioRef} 
-                                                            src={audioSrc} 
-                                                            preload="metadata"
-                                                            onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
-                                                            onCanPlay={(e) => setIsAudioReady(true)}
-                                                            onPlaying={() => setIsAudioPlaying(true)}
-                                                            onPause={() => setIsAudioPlaying(false)}
-                                                        >
-                                                        </audio>
-                                                    </div>
-                                                    ) : (
-                                                        <div className="row text-center">
-                                                            <p className="text-muted-foreground">No audio available</p>
                                                         </div>
-                                                    )
-                                                }
+                                                        
+                                                        {/* Audio Drawer audio tag */}
+                                                        <div className="row text-center mt-2">
+                                                            <audio 
+                                                                controls 
+                                                                ref={audioRef} 
+                                                                src={audioSrc} 
+                                                                preload="metadata"
+                                                                onDurationChange={(e) => setAudioDuration(e.currentTarget.duration)}
+                                                                onCanPlay={(e) => setIsAudioReady(true)}
+                                                                onPlaying={() => setIsAudioPlaying(true)}
+                                                                onPause={() => setIsAudioPlaying(false)}
+                                                            >
+                                                            </audio>
+                                                        </div>
 
-                                                <div className="row mt-3 pb-5">
-                                                    <p className="text-muted-foreground font-semibold h-fit">Transcript</p>
-                                                
-                                                    <div className="row transcript-section min-h-64 max-h-64 overflow-auto">
-                                                        <AudioTranscript
-                                                            text="Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools." 
-                                                            speed={50} 
-                                                        />
+                                                        <div className="row mt-3 pb-5">
+                                                            <p className="text-muted-foreground font-semibold h-fit">Transcript</p>
+                                                        
+                                                            <div className="row transcript-section min-h-64 max-h-64 overflow-auto">
+                                                                <AudioTranscript
+                                                                    text="Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools. Thank you for having me. I've worked on various projects ranging from e-commerce platforms to data visualization tools." 
+                                                                    speed={50} 
+                                                                />
+                                                            </div>
+                                                        </div>
+
                                                     </div>
+                                                
+                                                    <div className="col-span-1"></div>
+
                                                 </div>
-
-                                            </div>
-                                        
-                                            <div className="col-3 text-end"></div>
-
-                                        </div>
+                                            ) : (
+                                                <div className="text-center">
+                                                    <p className="text-lg font-semibold text-muted-foreground">
+                                                        No audio available
+                                                    </p>
+                                                </div>
+                                            )
+                                        }
 
                                     </DrawerContent>
 
