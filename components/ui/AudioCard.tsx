@@ -15,7 +15,7 @@ interface AudioCardProps {
 const AudioCard: FC<AudioCardProps> = (props): JSX.Element => {
     return (
         
-            <Card className="flex hover:bg-slate-100 px-3 pt-3 pb-1">
+            <Card className="flex hover:bg-slate-100 p-3">
 
                 <div className="col-span-2">
                     <div className="flex h-12 w-12 bg-slate-400 hover:bg-slate-700 items-center justify-center rounded-full border-3 border-muted">
