@@ -462,7 +462,7 @@ export default function Home() {
                                                     { underperformanceObj.map((segmentObj: { Skill: string, Rating: number, AveragePastRating: number }, index: number) => {
                                                         return (
                                                             <TableRow key={segmentObj.Skill}>
-                                                                <TableCell className="p-3 font-bold">
+                                                                <TableCell className="p-3 text-muted-foreground font-bold">
                                                                     {segmentObj.Skill}
                                                                 </TableCell>
                                                                 <TableCell className="p-3 text-xs">
