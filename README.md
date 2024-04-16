@@ -41,7 +41,8 @@
     - fetch_audio_file [GET HTTP API returns audio stream from .wav]: It fetches the specific audio file from public folder and returns a binary data stream to be played on the frontend.
     - (Theoretical backend operation): Ideally, the application will make use of NLP techniques to break the whole interview audio into skill segments and store it in secure folder.
 
-- API Security 
+- API Security
+    - Use of https protocol for secure transmission.
     - Store the audio files in a secured folder which is not accessible publicly. Ideally password protected folder.
     - Each API endpoint must have a basic authentication or oAuth authentiaction in place. So, without authorized credentials no one can access these API endpoints.
     - These endpoints must also support access control so, data can be protected at multiple levels and a user should only get the data they have access to and not highly confidential data.
