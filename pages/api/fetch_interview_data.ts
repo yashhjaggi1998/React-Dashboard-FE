@@ -37,39 +37,39 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                         Speaker: "Interviewer", 
                         Text: "Let's discuss how you would approach solving the Two-Sum problem using a hash table before we move on to coding. How would you start?",
                         StartTime: 0.1,
-                        EndTime: 6.5
+                        EndTime: 6.4,
                     },
                     {
                         Speaker: "User",
                         Text: "Sure, for the Two-Sum problem, we're given an array of integers and a target sum. We need to find two numbers in the array that add up to the target sum. One efficient approach is to use a hash table to store the numbers we've seen so far as we iterate through the array.",
-                        StartTime: 7,
-                        EndTime: 22,
+                        StartTime: 6.8,
+                        EndTime: 22.4,
                     },
                     {
                         Speaker: "Interviewer",
                         Text: "That's a good approach. How would you use the hash table to solve this problem?",
-                        StartTime: 23,
-                        EndTime: 27,
+                        StartTime: 22.8,
+                        EndTime: 27.4,
                     },
                     {
                         Speaker: "User",
                         Text: "We can iterate through the array and for each number, we'll calculate the complement (target - current number). If the complement exists in the hash table, it means we've found our pair of numbers that sum up to the target. If not, we'll add the current number to the hash table.",
-                        StartTime: 28,
-                        EndTime: 40
+                        StartTime: 27.8,
+                        EndTime: 43.2,
 
                     },
                     {
                         Speaker: "Interviewer",
                         Text: "How would you handle edge cases or special cases in this problem?",
-                        StartTime: 41,
-                        EndTime: 50
+                        StartTime: 43.4,
+                        EndTime: 47.4
                     },
                     {
                         lineId: 6,
                         Speaker: "User",
                         Text: "One edge case to consider is when there are no valid pairs in the array that sum up to the target. In such cases, we can return an empty list or handle it based on the problem requirements.",
-                        StartTime: 51,
-                        EndTime: 59
+                        StartTime: 47.8,
+                        EndTime: 58
                     },
                 ]
             },
