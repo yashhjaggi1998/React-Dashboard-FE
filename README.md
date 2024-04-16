@@ -7,7 +7,7 @@
 6) Detailed description of goods & bads in current performance.
 7) Detailed AI suggestion based on skill segments.
 8) Real-time, visually intuitive audio listening capability for users iwth limited hearing capability.
-9) Custom Audio PLayer with navigational ausio controls.
+9) Custom Audio Player with navigational ausio controls.
 10) Handy AI suggestions while listening to the audio.
 
 ## Design Ideology: Reasons for designing the way I did!
@@ -15,10 +15,10 @@
 1) I want to display information in a logical order where all info seems connected but logically independent. How?
     - All information is broken down into skill segments based on the skills related to the interview (Algorithms, Communication, etc.).
     - I use 4 tabs to organize info in logical units. (Vertical Pillars)
-        -> Overview tab gives basic overview of current performnace.
-        -> Past Performance Tab compares current performance with average of past performances. This helps user analyse trend in their performance.
-        -> AI Suggests tab gives description of their performance and suggests improvemnts if any or accomplishments if any.
-        -> Finally, the audio is broken into segments so that users do not have to listen to long audios. They can interact with the audio and also get its transcripts which is important for users with limited hearing capabilities.
+        - Overview tab gives basic overview of current performnace.
+        - Past Performance Tab compares current performance with average of past performances. This helps user analyse trend in their performance.
+        - AI Suggests tab gives description of their performance and suggests improvemnts if any or accomplishments if any.
+        - Finally, the audio is broken into segments so that users do not have to listen to long audios. They can interact with the audio and also get its transcripts which is important for users with limited hearing capabilities.
 
 2) I want to break the the information into layers starting with the most abstract information and diving into specifics. (Horizontal Pillars)
     - Overview Tab: Break analysis into skill segments.
