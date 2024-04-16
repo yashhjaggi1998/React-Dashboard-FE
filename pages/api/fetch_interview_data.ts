@@ -161,13 +161,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use.",
-                        StartTime: 0,
+                        Text: "Great job explaining your thought process while coding. Now, let's discuss the space and time complexity of your solution.",
+                        StartTime: 0.1,
+                        EndTime: 6.5,
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
-                        StartTime: 5,
+                        Text: "The space complexity of the solution is O(n) because we use a hash table to store at most n elements from the input array. The time complexity is also O(n) because we iterate through the array once and each lookup in the hash table is constant time on average.",
+                        StartTime: 6.5,
+                        EndTime: 22.2,
+                    },
+                    {
+                        Speaker: "Interviewer",
+                        Text: "Well analyzed! Your approach seems efficient and well thought out. Thank you for explaining your solution in detail.",
+                        StartTime: 22.4,
+                        EndTime: 30,
                     },
                 ]
             },
