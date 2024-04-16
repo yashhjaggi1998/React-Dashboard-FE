@@ -4,10 +4,10 @@
 3) Performance comparision with peers.
 4) Self Benchmarking from past performance.
 5) Quick Suggestion snippets: 15 words or less.
-6) Detailed description of goods & bads in current performance.
+6) Detailed description of goods & bads for each skill segment.
 7) Detailed AI suggestion based on skill segments.
-8) Real-time, visually intuitive audio listening capability for users iwth limited hearing capability.
-9) Custom Audio Player with navigational ausio controls.
+8) Real-time, visually intuitive audio listening capability for users with limited hearing capability.
+9) Custom Audio Player with navigational audio controls.
 10) Handy AI suggestions while listening to the audio.
 
 ## Design Ideology: Reasons for designing the way I did!
