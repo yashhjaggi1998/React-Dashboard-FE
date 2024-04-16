@@ -426,7 +426,7 @@ export default function Home() {
 
                                     <ResizablePanel className="border rounded-2" minSize={50}>
                                                     
-                                        <p className="text-xl text-muted-foreground font-bold px-4 my-3">
+                                        <p className="text-xl font-bold px-4 my-3">
                                             Benchmarking Against Your Former Self
                                         </p>
 
@@ -439,7 +439,7 @@ export default function Home() {
                                                     {overperformanceObj.map((segmentObj: { Skill: string, Rating: number, AveragePastRating: number }, index: number) => {
                                                         return (
                                                             <TableRow key={index}>
-                                                                <TableCell className="p-3 font-bold">
+                                                                <TableCell className="p-3 text-muted-foreground font-bold">
                                                                     {segmentObj.Skill}
                                                                 </TableCell>
                                                                 <TableCell className="p-3 text-xs">
