@@ -25,7 +25,7 @@
     - AI Suggests Tab: Firstly, display 1 line AI suggestion to the user to give them a quick suggestion. If the user wants to dive deeper then each accordion describes their performance, highlights their strengths & weaknesses and also shows a detailed suggestion from AI.
 
 3) I want the user to get wholesome & comprehensive review but at the same time not demand much time of the user..
-    - I have used differnet visualization techniques to summarize user performance. 
+    - I have used different visualization techniques to summarize user performance. 
     - Display them in self explanatory charts for users to get 1 look information.
     - Provide quick information and them dive deeper into that information based on user's choice.
 
