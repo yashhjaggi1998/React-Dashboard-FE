@@ -46,3 +46,4 @@
     - Store the audio files in a secured folder which is not accessible publicly. Ideally password protected folder.
     - Each API endpoint must have a basic authentication or oAuth authentiaction in place. So, without authorized credentials no one can access these API endpoints.
     - These endpoints must also support access control so, data can be protected at multiple levels and a user should only get the data they have access to and not highly confidential data.
+    - Communicating with the user taht their data is being collected, processed and stored is very important as well.
