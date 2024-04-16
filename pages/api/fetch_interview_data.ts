@@ -111,13 +111,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use",
-                        StartTime: 0,
+                        Text: "How about the data structure you'll use? Why a hash table specifically?",
+                        StartTime: 0.1,
+                        EndTime: 4.4,
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
-                        StartTime: 5,
+                        Text: "A hash table provides constant-time lookup and insertion, making it efficient for this problem. We can store the numbers we've seen so far along with their indices in the hash table.",
+                        StartTime: 4.6,
+                        EndTime: 16,
                     },
                 ]
             },
@@ -134,13 +136,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 Transcript: [
                     {   
                         Speaker: "Interviewer",
-                        Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use",
-                        StartTime: 0,
+                        Text: "Excellent. Now, let's move on to coding the discussed solution for the Two-Sum problem using a hash table. Please explain your thought process as you code.",
+                        StartTime: 0.1,
+                        EndTime: 9.5
                     },
                     {
                         Speaker: "User",
-                        Text: "The algorithm involves iterating through the array, calculating the complement for each number, and checking if the complement exists in the hash table. If it does, we've found the pair. Otherwise, we add the current number to the hash table.",
-                        StartTime: 5,
+                        Text: " In this code, I've used a hash table (num_indices) to store the numbers we've seen along with their indices. We iterate through the array, calculate the complement, and check if it exists in the hash table. If it does, we return the indices of the pair. Otherwise, we add the current number and its index to the hash table.",
+                        StartTime: 9.8,
+                        EndTime: 30
                     },
                 ]
             },
