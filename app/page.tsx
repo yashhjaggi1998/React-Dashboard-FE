@@ -36,6 +36,9 @@ import LoadingSpinner from "@/components/loading/LoadingSpinner";
 import { SkillRatingCard } from "@/components/ui/SkillRatingCard";
 import { UserMetaData } from "@/components/ui/UserMetaData";
 import { Progress } from "@/components/ui/progress";
+import { Popover } from "@/components/ui/popover";
+import { PopoverArrow, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -142,6 +145,7 @@ export default function Home() {
     const [isAudioReady, setIsAudioReady] = useState<boolean>(false);
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
     const [isAudioLoading, setIsAudioLoading] = useState<boolean>(false);
+    const [audioSuggestion, setAudioSuggestion] = useState<string>("");
 
     useEffect(() => {
 
@@ -248,7 +252,7 @@ export default function Home() {
 
     }, []);
 
-    const handleAudioDrawer = async(_audioTitle: string, _audioDate: string, _audioTranscript: any[]) => {
+    const handleAudioDrawer = async(_audioTitle: string, _audioDate: string, _audioTranscript: any[], _audioSugesstion: string) => {
 
         setIsDrawerOpen(!isDrawerOpen);
         setIsAudioLoading(true);
@@ -256,6 +260,7 @@ export default function Home() {
         //Set all audio metadata whoch will be used in the audio drawer
         setAudioTitle(_audioTitle);
         setAudioDate(_audioDate);
+        setAudioSuggestion(_audioSugesstion);
         if(_audioTranscript)
         {
             setAudioTranscript(_audioTranscript);
@@ -280,6 +285,7 @@ export default function Home() {
         setAudioSrc("");
         setAudioTitle("");
         setAudioDate("");
+        setAudioSuggestion("");
         setAudioTranscript([]);
         setAudioCurrentTime(0);
         setIsAudioPlaying(false);
@@ -631,7 +637,7 @@ export default function Home() {
                                         interviewData.Segments.map((segment, index) => {
                                             return (
                                                 <div
-                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.Transcript)}
+                                                    onClick={() => handleAudioDrawer(segment.Skill, interviewData.Date, segment.Transcript, segment.Suggestion)}
                                                     className="col-span-1 card-container cursor-pointer" 
                                                     key={index}
                                                 >
@@ -659,6 +665,10 @@ export default function Home() {
                                             </button>
                                         </div>
 
+                                        {/* If audio is being fetched show the loading message, if unsuccessful , 
+                                            show no audio available message
+                                            and if successful show the audio player 
+                                        */}
                                         { 
                                             ! isAudioLoading ? (
                                                 audioTitle && audioDate ?
@@ -697,13 +707,38 @@ export default function Home() {
                                                                     }
 
                                                                     {/* Title and Date of the audio Segment */}
-                                                                    <div className="col-span-10">
+                                                                    <div className="col-span-8 items-center">
                                                                         <DrawerTitle>{audioTitle}</DrawerTitle>
                                                                         <DrawerDescription className="mt-1">{audioDate}</DrawerDescription>
                                                                     </div>
 
-                                                                    <div className="col-span-1" onClick={switchToAISuggestsTab}>
-                                                                        View AI Suggestion
+                                                                    <div className="col-span-3 text-end">
+                                                                        <Popover>
+                                                                            <PopoverTrigger asChild>
+                                                                                <span 
+                                                                                    className="cursor-pointer font-semibold text-muted-foreground hover:underline hover:text-black"
+                                                                                >
+                                                                                    View AI Suggestion
+                                                                                </span>
+                                                                            </PopoverTrigger>
+                                                                            <PopoverContent className="w-96 z-50 text-start bg-white border rounded-lg overflow-auto px-3 pt-3">
+                                                                                <PopoverArrow />
+                                                                                <p className="text-lg font-semibold">
+                                                                                    <span className="flex items-center">
+                                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                                                                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                                                                        </svg>
+                                                                                        <span className="ms-2">
+                                                                                            Suggestion
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </p>
+                                                                                <p className="text-sm text-muted-foreground">
+                                                                                    {audioSuggestion}
+                                                                                </p>
+                                                                                
+                                                                            </PopoverContent>
+                                                                        </Popover>
                                                                     </div>
 
                                                                 </div>
