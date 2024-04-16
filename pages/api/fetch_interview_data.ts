@@ -5,7 +5,7 @@ import { start } from 'repl';
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
     
     const interviewData = {
-        Result : "Leaning Hire",
+        Result : "Strong Hire",
         Position: "Full-Stack Engineer (NextJS)",
         User: "Yashh Jaggi",
         Date: new Date().toDateString(),

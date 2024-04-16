@@ -721,7 +721,7 @@ export default function Home() {
                                                                                     View AI Suggestion
                                                                                 </span>
                                                                             </PopoverTrigger>
-                                                                            <PopoverContent className="w-96 z-50 text-start bg-white border rounded-lg overflow-auto px-3 pt-3">
+                                                                            <PopoverContent className="w-96 z-50 text-start bg-white border rounded-lg overflow-auto px-3 py-3">
                                                                                 <PopoverArrow />
                                                                                 <p className="text-lg font-semibold">
                                                                                     <span className="flex items-center">
