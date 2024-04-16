@@ -743,13 +743,20 @@ export default function Home() {
 
                                                                 {/* Audio Progress Bar */}
                                                                 { isAudioReady && audioDuration !== 0 && (
-                                                                    <div className="row">
+                                                                    <span className="flex items-center text-sm font-semibold text-muted-foreground">
+                                                                        <span>
+                                                                            {/* Display the current time and duration of the audio 
+                                                                            If hours is 0 do not didplay it for both time on the left of backslash and right of backslash*/}
+                                                                            {`${Math.floor(audioCurrentTime / 60)}:${Math.floor(audioCurrentTime % 60) < 10 ? `0${Math.floor(audioCurrentTime % 60)}` : Math.floor(audioCurrentTime % 60)}/${audioDuration >= 3600 ? `${Math.floor(audioDuration / 3600)}:${Math.floor((audioDuration % 3600) / 60)}:${Math.floor(audioDuration % 60)}` : `${Math.floor(audioDuration / 60)}:${Math.floor(audioDuration % 60)}`}`}
+                                                                            
+                                                                        </span>
+
                                                                         <Progress 
                                                                             value={(audioCurrentTime / audioDuration) * 100}
                                                                             max={100}
-                                                                            className="mt-2 w-full bg-slate-200 p-0"
+                                                                            className="ms-2 w-full bg-slate-200 p-0"
                                                                         />
-                                                                    </div>
+                                                                    </span>
                                                                 )}
                                                                 
                                                                 {/* Audio Drawer audio tag */}

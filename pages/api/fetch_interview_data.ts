@@ -87,8 +87,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                     {   
                         Speaker: "Interviewer",
                         Text: "Great. Now that we have a clear problem-solving technique, let's discuss the algorithm you plan to use",
-                        StartTime: 1,
-                        EndTime: 6,
+                        StartTime: 0.1,
+                        EndTime: 6.5,
                     },
                     {
                         Speaker: "User",
