@@ -1,4 +1,12 @@
 Live link: https://smart-interview-review-dashboard-mock-ai.vercel.app/
+
+## Tech Stack
+- Next.js
+- React
+- Typescript
+- Tailwind CSS
+- shadcn-ui
+
 ## Frontend Features
 1) Tabbed Information in logical units.
 2) Quantitative performance overview.
